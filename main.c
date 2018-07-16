@@ -23,8 +23,8 @@ typedef struct Fecha{
     int anio;
 }Fecha*
 
-void* agregar_tarea()
-void*
+void* agregar_tarea();
+void* crear_categoría();
 
 int main(){
 
