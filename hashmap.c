@@ -1,8 +1,18 @@
+#include <stdio.h>
+#include <stdlib.h>
 
+#include "hashmap.h"
 
+typedef struct nodo{
+    long key;
+    void* data;
+}hashElem;
 
-
-
+typedef struct{
+    hashElem** hashArray;
+    int size; //cant. elementos no nulos
+    int capac; //Dimension tabla
+}HashMap;
 
 HashMap* createHashMap(int capac){
     int i;
@@ -15,15 +25,6 @@ HashMap* createHashMap(int capac){
     return map;
 }
 
-/*long hash (long key, long capac){
-    return key%capac;
-}*/
-
-/*
-long hash (long key, long capac){
-    return (key*key)%capac;
-}
-*/
 long hash (long key, long capac){
   float A = 0.6180334;
   float B = (float) key*A - (float) ((int)((float)key*A));
