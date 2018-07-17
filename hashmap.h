@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifndef HASHMAP
-#define HASHMAP
+#ifndef HASHMAP_H
+#define HASHMAP_H
 
 typedef struct nodo hashElem;
 
 typedef struct HashMap HashMap;
 
-long hash (long key, long capac);
+long hash(long key, long capac);
 
 void enlarge(HashMap* map);
 
