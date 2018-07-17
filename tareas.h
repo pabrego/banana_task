@@ -1,26 +1,11 @@
 #ifndef TAREAS_H
 #define TAREAS_H
 
-typedef struct Tarea{
-    char* categoria;
-    char* nombre;
-    char* descripcion;
-    int prioridad;
-    Fecha* fecha;
-    int estado;
-}Tarea;
+typedef struct Tarea Tarea;
 
-typedef struct Categoria{
-    TreeMap* por_fecha;
-    TreeMap* por_cate;
-    char* nombre;
-}Categoria;
+typedef struct Categoria Categoria;
 
-typedef struct Fecha{
-    int dia;
-    int mes;
-    int anio;
-}Fecha*
+typedef struct Fecha Fecha;
 
 void agregar_tarea();
 void crear_categoria();
