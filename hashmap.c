@@ -8,7 +8,7 @@ typedef struct nodo{
     void* data;
 }hashElem;
 
-typedef struct{
+typedef struct HashMap{
     hashElem** hashArray;
     int size; //cant. elementos no nulos
     int capac; //Dimension tabla
