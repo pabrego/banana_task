@@ -29,3 +29,19 @@ Tarea* crea_tarea(){
     nodo->fecha = crea_fecha();
     return nodo;
 }
+
+void mostrar_todo(){
+    int opcion;
+
+    /*menú preguntando opciones de muestra*/
+
+    switch (opcion) {
+        case 1: mostrar_por_fecha();break;
+        case 2: mostrar_por_prioridad();break;
+        case 3: mostrar_categoria();
+    }
+
+}
+void mostrar_por_fecha();
+void mostrar_por_prioridad();
+void mostrar_categoria();
