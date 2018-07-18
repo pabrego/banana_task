@@ -12,8 +12,8 @@ typedef struct Tarea{
 }Tarea;
 
 typedef struct Categoria{
-    TreeMap* por_fecha;
-    TreeMap* por_cate;
+    t_rbnode* por_fecha;
+    t_rbnode* por_cate;
     char* n_categoria;
 }Categoria;
 
