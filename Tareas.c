@@ -30,17 +30,24 @@ Tarea* crea_tarea(){
     return nodo;
 }
 
-void mostrar_todo(){
+void mostrar_todo(HashMap* hash_categorias, arbol* por_fecha, arbol* por_prioridad)
+{
     int opcion;
 
     /*menú preguntando opciones de muestra*/
 
-    switch (opcion) {
-        case 1: mostrar_por_fecha();break;
-        case 2: mostrar_por_prioridad();break;
-        case 3: mostrar_categoria();
+    switch (opcion)
+    {
+        case 1: mostrar_arbol(por_fecha);break;
+        case 2: mostrar_arbol(por_prioridad);break;
+        case 3: mostrar_categoria(hash_categorias);
     }
 
+}
+
+void mostrar_categoria(HashMap* hash_categorias)
+{
+    
 }
 
 void mostrar_arbol(arbol* arbol)
