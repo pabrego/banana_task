@@ -30,24 +30,40 @@ Tarea* crea_tarea(){
     return nodo;
 }
 
-void mostrar_todo(HashMap* hash_categorias, arbol* por_fecha, arbol* por_prioridad)
+void mostrar_todo(HashMap* hash_categorias, arbol* por_fecha, arbol** por_prioridad)
 {
     int opcion;
 
-    /*menú preguntando opciones de muestra*/
+    printf("\n");
+    printf(" _________________________________________ \n" );
+    printf("|                                         |\n" );
+    printf("|        TODAS:                           |\n" );
+    printf("|   1.-  Ordenadas por fecha.             |\n" );
+    printf("|   2.-  Ordenadas por prioridad.         |\n" );
+    printf("|                                         |\n" );
+    printf("|   3.-  Revisar categorias.              |\n" );
+    printf("|                                         |\n" );
+    printf("|   0.-  Volver al menú principal.        |\n" );
+    printf("|_________________________________________|\n" );
 
     switch (opcion)
     {
         case 1: mostrar_arbol(por_fecha);break;
-        case 2: mostrar_arbol(por_prioridad);break;
-        case 3: mostrar_categoria(hash_categorias);
+        case 2: mostrar_prioridad(por_prioridad);break;
+        case 3: mostrar_categoria(hash_categorias);break;
+        case 0: break;
     }
+
+}
+
+void mostrar_prioridad(arbol** por_prioridad)
+{
 
 }
 
 void mostrar_categoria(HashMap* hash_categorias)
 {
-    
+
 }
 
 void mostrar_arbol(arbol* arbol)
@@ -57,21 +73,21 @@ void mostrar_arbol(arbol* arbol)
     int* month = imprimir->fecha->mes;
     int* year = imprimir->fecha->anio;
     char* name = imprimir->nombre;
-    int* prio = imprimir->prioridad;
-    char* cate = imprimir->categoria;
+    int* priority = imprimir->prioridad;
+    char* category = imprimir->categoria;
     int* activa = imprimir->estado;
     while(imprimir){
-        if(*prio == 1)
+        if(*priority == 1)
         {
-            printf("|%d/%d/%d  Baja   %s  %s ",day, month, year, name, cate);
+            printf("|%d/%d/%d  Baja   %s  %s ",day, month, year, name, category);
         }
-        else if(*prio == 2)
+        else if(*priority == 2)
         {
-            printf("|%d/%d/%d  Media  %s  %s ",day, month, year, name, cate);
+            printf("|%d/%d/%d  Media  %s  %s ",day, month, year, name, category);
         }
-        else if(*prio == 3)
+        else if(*priority == 3)
         {
-            printf("|%d/%d/%d  Alta   %s  %s ",day, month, year, name, cate);
+            printf("|%d/%d/%d  Alta   %s  %s ",day, month, year, name, category);
         }
         if(activa)
         {
@@ -83,6 +99,4 @@ void mostrar_arbol(arbol* arbol)
         }
         imprimir = next(arbol);
     }
-
-
 }

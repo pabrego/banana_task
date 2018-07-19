@@ -12,8 +12,8 @@ typedef struct Tarea{
 }Tarea;
 
 typedef struct Categoria{
-    t_rbnode* por_fecha;
-    t_rbnode* por_cate;
+    arbol* por_fecha;
+    arbol** por_priori;
     char* n_categoria;
 }Categoria;
 
@@ -27,10 +27,10 @@ Categoria* crea_n_categoria();
 Fecha* crea_fecha();
 Tarea* crea_tarea();
 void agregar_tarea();
-void crear_categoria();
-void mostrar_todo();
-void mostrar_por_fecha();
-void mostrar_por_prioridad();
+void agregar_categoria();
+void mostrar_todo(HashMap* hash_categorias, arbol* por_fecha, arbol** por_prioridad);
+void mostrar_arbol();
+void mostrar_prioridad();
 void mostrar_categoria();
 void editar_tarea();
 void quitar_tarea();
