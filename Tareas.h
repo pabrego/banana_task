@@ -5,8 +5,8 @@
 typedef struct Tarea{
     char* categoria;
     char* nombre;
-    char* descripcion;
-    int prioridad;
+    char* descripcion; 
+    int prioridad; probando cositas en github
     struct Fecha* fecha;
     int estado;
 }Tarea;
