@@ -42,6 +42,7 @@ void mostrar_todo(){
     }
 
 }
-void mostrar_por_fecha();
-void mostrar_por_prioridad();
-void mostrar_categoria();
+
+void mostrar_arbol(arbol* arbol){
+    
+    
