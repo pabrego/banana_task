@@ -43,6 +43,39 @@ void mostrar_todo(){
 
 }
 
-void mostrar_arbol(arbol* arbol){
-    
-    
+void mostrar_arbol(arbol* arbol)
+{
+    Tarea* imprimir = first(arbol);
+    int* day = imprimir->fecha->dia;
+    int* month = imprimir->fecha->mes;
+    int* year = imprimir->fecha->anio;
+    char* name = imprimir->nombre;
+    int* prio = imprimir->prioridad;
+    char* cate = imprimir->categoria;
+    int* activa = imprimir->estado;
+    while(imprimir){
+        if(*prio == 1)
+        {
+            printf("|%d/%d/%d  Baja   %s  %s ",day, month, year, name, cate);
+        }
+        else if(*prio == 2)
+        {
+            printf("|%d/%d/%d  Media  %s  %s ",day, month, year, name, cate);
+        }
+        else if(*prio == 3)
+        {
+            printf("|%d/%d/%d  Alta   %s  %s ",day, month, year, name, cate);
+        }
+        if(activa)
+        {
+            printf("   Activa  \n");
+        }
+        else
+        {
+            printf(" Realizada \n");
+        }
+        imprimir = next(arbol);
+    }
+
+
+}
