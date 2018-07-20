@@ -18,6 +18,7 @@ typedef struct rbtree
     rbt_node* root;
     rbt_node* current;
     rbt_node* nil;
+    int (*lower_than)(void* key1, void* key2)       //Funcion de comparacion
 
 }RBTree;
 
