@@ -104,11 +104,6 @@ void mostrar_categoria(HashMap* hash_categorias)
 
 }
 
-void guardar_todo(HashMap* hash_categorias, RBTree* por_fecha, RBTree** por_prioridad)
-{
-    FILE* f = fopen();
-}
-
 void mostrar_arbol(RBTree* arbol)
 {
     Tarea* imprimir = first(arbol);
@@ -142,4 +137,85 @@ void mostrar_arbol(RBTree* arbol)
         }
         imprimir = next(arbol);
     }
+}
+
+void guardar_todo(RBTree* por_fecha)
+{
+    FILE* fp = fopen("tareas_guardadas.csv", "w");
+    Tarea* imprimir = first(por_fecha);
+    int* day = imprimir->fecha->dia;
+    int* month = imprimir->fecha->mes;
+    int* year = imprimir->fecha->anio;
+    char* name = imprimir->nombre;
+    int* priority = imprimir->prioridad;
+    char* category = imprimir->categoria;
+    int* activa = imprimir->estado;
+    char* desc = imprimir->descripcion;
+    while(imprimir)
+    {
+        fprintf(fp, "%d,%d,%d,%d,%s,%s,%d\n", day, month, year, priority, name, desc, category, activa);
+        imprimir = next(por_fecha);
+    }
+    fclose(fp);
+}
+
+void cargar_archivo(HashMap* hash_categorias, RBTree* por_fecha, RBTree** por_prioridad)
+{
+    FILE* fp = fopen("tareas_guardadas.csv","r");
+    if(fp == NULL){
+        printf("error de lectura\n");exit(0);
+    }
+    Tarea* aux;
+    Categoria* category;
+    char* linea[250];
+    int i;
+    while(fgets(linea, 250, fp))
+    {
+        linea[strlen(linea)-1] = '\0';
+        aux = leer_tarea(linea);
+        RB_insert(por_fecha, aux->fecha, aux);
+        RB_insert(por_prioridad[aux->prioridad - 1], aux->fecha, aux);
+        category = hp_search(hash_categorias, atoi(aux->categoria));
+        RB_insert(category->por_fecha, aux->flecha, aux);
+        RB_insert(category->por_prioridad[aux->prioridad - 1], aux->fecha, aux);
+    }
+
+}
+
+Tarea* leer_tarea(char line[])
+{
+    t = crea_tarea();
+    const char s[2] = ",";
+    char *token;
+
+    token = strtok(line, s);
+    token[strlen(token)-1]='\0';
+    t->dia = atoi(token);
+
+    token = strtok(NULL, s);
+    token[strlen(token)-1]='\0';
+    t->mes = atoi(token);
+
+    token = strtok(NULL, s);
+    token[strlen(token)-1]='\0';
+    t->anio = atoi(token);
+
+    token = strtok(NULL, s);
+    token[strlen(token)-1]='\0';
+    strcpy(p->nombre, token);
+
+    token = strtok(NULL, s);
+    token[strlen(token)-1]='\0';
+    strcpy(p->descripcion, token);
+
+    token = strtok(NULL, s);
+    token[strlen(token)-1]='\0';
+    strcpy(p->categoria, token);
+
+    token = strtok(NULL,caracter);
+    if(token != NULL)
+    {
+        p->estado = atoi(token);
+    }
+    return t;
 }
