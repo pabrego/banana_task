@@ -30,7 +30,7 @@ Tarea* crea_tarea(){
     return nodo;
 }
 
-void mostrar_todo(HashMap* hash_categorias, arbol* por_fecha, arbol** por_prioridad)
+void mostrar_todo(HashMap* hash_categorias, RBTree* por_fecha, RBTree** por_prioridad)
 {
     int opcion;
 
@@ -56,9 +56,13 @@ void mostrar_todo(HashMap* hash_categorias, arbol* por_fecha, arbol** por_priori
 
 }
 
-void mostrar_prioridad(arbol** por_prioridad)
+void mostrar_prioridad(RBTree** por_prioridad)
 {
-
+    int i;
+    for(i=0;i<5;i++)
+    {
+        mostrar_arbol(por_prioridad[i]);
+    }
 }
 
 void mostrar_categoria(HashMap* hash_categorias)
@@ -66,7 +70,12 @@ void mostrar_categoria(HashMap* hash_categorias)
 
 }
 
-void mostrar_arbol(arbol* arbol)
+void guardar_todo(HashMap* hash_categorias, RBTree* por_fecha, RBTree** por_prioridad)
+{
+
+}
+
+void mostrar_arbol(RBTree* arbol)
 {
     Tarea* imprimir = first(arbol);
     int* day = imprimir->fecha->dia;
