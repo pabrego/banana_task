@@ -329,9 +329,9 @@ void* RB_next(RBTree* T)
     else
     {
         aux = nodo->parent;
-        while(aux != NULL)
+        while(aux != T->nil)
         {
-            if(aux->left ==  nodo)
+            if(aux->left == nodo)
             {
                 tree->current = aux;
                 return tree->current->data;
