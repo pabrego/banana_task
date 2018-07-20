@@ -6,7 +6,7 @@ typedef struct rbt_node
 {
     void* data;
     int color; //BLACK = 1, RED = 2
-    int key;
+    void* key;      //de Int a Void*
     struct rbt_node* left;
     struct rbt_node* right;
     struct rbt_node* parent;
@@ -22,14 +22,15 @@ typedef struct rbtree
 
 }RBTree;
 
-RBTree* create_RBTree()
+RBTree* create_RBTree(int(*lower_than)(void* key1, void* key2))
 {
     RBTree* tree = (RBTree*) calloc(1, sizeof(RBTree));
     tree->root = tree->nil;
+    tree->lower_than = lower_than;
     return tree;
 }
 
-rbt_node* create_rbt_node(int key, void* data)
+rbt_node* create_rbt_node(void* key, void* data)
 {
     rbt_node* node = (rbt_node*) calloc(1, sizeof(rbt_node));
     node->data = data;
@@ -123,7 +124,7 @@ void RB_insert_fixup(RBTree* T, rbt_node* z)
     T->root->color = 1;
 }
 
-void RB_insert(RBTree* T, int key, void* data)
+void RB_insert(RBTree* T, void* key, void* data)//Key: de int a void*
 {
     rbt_node* z = create_rbt_node(key, data);
     rbt_node* y = T->nil;
@@ -131,7 +132,7 @@ void RB_insert(RBTree* T, int key, void* data)
     while (x != T->nil)
     {
         y = x;
-        if (z->key < x->key)
+        if (lower_than(z->key, x->key))
             x = x->left;
         else
             x = x->right;
@@ -139,7 +140,7 @@ void RB_insert(RBTree* T, int key, void* data)
     z->parent = y;
     if (y == T->nil)
         T->root = z;
-    else if (z->key < y->key)
+    else if (lower_than(z->key, y->key))
         y->left = z;
     else
         y->right = z;
@@ -237,7 +238,7 @@ void RB_delete_fixup(RBTree* T, rbt_node* x)
     x->color = 1;
 }
 
-void RB_delete(RBTree* T, int key)
+void RB_delete(RBTree* T, void* key) //de Int a Void*
 {
     rbt_node* z = RB_search(T, key);
     rbt_node* y = z;
@@ -275,9 +276,31 @@ void RB_delete(RBTree* T, int key)
         RB_delete_fixup(T, x);
 }
 
-void* RB_search(RBTree* T, int key)
+void* RB_search(RBTree* T, void* key)//de Int a Void*
 {
-
+    T->current = T->root;
+    while(1)
+    {
+        if(T->current == T->nil)
+        {
+            return NULL;
+        }
+        else
+        {
+            if(((!T->lower_than(key, T->current->key)) && (!T->lower_than(T->current->key, key)))
+               {
+                    return T->current->data;
+               }
+               else if (T->lower_than(T->current->key, key)
+               {
+                    T->current = T->current->right;
+               }
+               else 
+               {
+                   T->current = T->current->left;
+               }        
+        }
+    }
 }
 
 void* RB_first(RBTree* T)
@@ -288,4 +311,34 @@ void* RB_first(RBTree* T)
     return NULL;
 }
 
-void* RB_next(RBTree* T);
+void* RB_next(RBTree* T)
+{
+    rbt_node* nodo = T->current;
+    rbt_node* aux;
+    
+    if(nodo->right != T->nil)
+    {
+        nodo = nodo->right;
+        while(nodo->left)
+        {
+            nodo = nodo->left;
+        }
+        tree->current = nodo;
+        return tree->current->data;
+    }
+    else
+    {
+        aux = nodo->parent;
+        while(aux != T->nil)
+        {
+            if(aux->left == nodo)
+            {
+                tree->current = aux;
+                return tree->current->data;
+            }
+            nodo = aux;
+            aux = aux->parent;
+        }
+        return NULL;
+    }
+}
