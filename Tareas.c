@@ -3,6 +3,40 @@
 #include <string.h>
 #include "Tareas.h"
 
+int lower_than(Fecha* key_1, Fecha* key_2)
+{
+    if(key_1->anio < key_2->anio)
+    {
+        return 1;
+    }
+    else if(key_1->anio > key_2->anio)
+    {
+        return 0;
+    }
+    else
+    {
+        if(key_1->mes < key_2->mes)
+        {
+            return 1;
+        }
+        else if (key_1->mes > key_2->mes)
+        {
+            return 0;
+        }
+        else
+        {
+            if(key_1->dia < key_2->dia)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+    }
+}
+
 Categoria* crea_n_categoria(){
     Categoria* nodo = (Categoria*) malloc(sizeof(Categoria));
     nodo->n_categoria = (char*) malloc(sizeof(char)*16);
