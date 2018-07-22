@@ -18,24 +18,30 @@ typedef struct rbtree
     rbt_node* root;
     rbt_node* current;
     rbt_node* nil;
-    int (*lower_than)(void* key1, void* key2)       //Funcion de comparacion
+    int (*lower_than)(void* key1, void* key2);       //Funcion de comparacion
 
 }RBTree;
-
-RBTree* create_RBTree(int(*lower_than)(void* key1, void* key2))
-{
-    RBTree* tree = (RBTree*) calloc(1, sizeof(RBTree));
-    tree->root = tree->nil;
-    tree->lower_than = lower_than;
-    return tree;
-}
 
 rbt_node* create_rbt_node(void* key, void* data)
 {
     rbt_node* node = (rbt_node*) calloc(1, sizeof(rbt_node));
     node->data = data;
     node->key = key;
+    node->color = 0;
+    node->left = NULL;
+    node->right = NULL;
+    node->parent = NULL;
     return node;
+}
+
+RBTree* create_RBTree(int (*lower_than)(void* key1, void* key2))
+{
+    RBTree* tree = (RBTree*) calloc(1, sizeof(RBTree));
+    tree->nil = create_rbt_node(0, 0);
+    tree->nil->color = 1;
+    tree->root = tree->nil;
+    tree->lower_than = lower_than;
+    return tree;
 }
 
 void left_rotate(RBTree* T, rbt_node* x)
@@ -128,11 +134,11 @@ void RB_insert(RBTree* T, void* key, void* data)//Key: de int a void*
 {
     rbt_node* z = create_rbt_node(key, data);
     rbt_node* y = T->nil;
-    rbt_node* x = T->root;
+    rbt_node* x = T->root;//
     while (x != T->nil)
     {
         y = x;
-        if (lower_than(z->key, x->key))
+        if (T->lower_than(z->key, x->key))
             x = x->left;
         else
             x = x->right;
@@ -140,7 +146,7 @@ void RB_insert(RBTree* T, void* key, void* data)//Key: de int a void*
     z->parent = y;
     if (y == T->nil)
         T->root = z;
-    else if (lower_than(z->key, y->key))
+    else if (T->lower_than(z->key, y->key))
         y->left = z;
     else
         y->right = z;
@@ -148,13 +154,6 @@ void RB_insert(RBTree* T, void* key, void* data)//Key: de int a void*
     z->right = T->nil;
     z->color = 2;
     RB_insert_fixup(T, z);
-}
-
-void* tree_minimum(RBTree* T, rbt_node* x)
-{
-    while (x->left != T->nil)
-        x = x->left;
-    return x;
 }
 
 void RB_transplant(RBTree* T, rbt_node* u, rbt_node* v)
@@ -238,42 +237,74 @@ void RB_delete_fixup(RBTree* T, rbt_node* x)
     x->color = 1;
 }
 
+void* RB_delete_search(RBTree* T, void* key)
+{
+    T->current = T->root;
+    while(1)
+    {
+        if(T->current == T->nil)
+        {
+            return NULL;
+        }
+        else
+        {
+            if(((!T->lower_than(key, T->current->key)) && (!T->lower_than(T->current->key, key))))
+            {
+                return T->current;
+            }
+            else if (T->lower_than(T->current->key, key))
+            {
+                T->current = T->current->right;
+            }
+            else
+            {
+                T->current = T->current->left;
+            }
+        }
+    }
+}
+
 void RB_delete(RBTree* T, void* key) //de Int a Void*
 {
-    rbt_node* z = RB_search(T, key);
+    rbt_node* z = RB_delete_search(T, key);
     rbt_node* y = z;
     rbt_node* x;
     int yOriginalcolor = y->color;
-    if (z->left == T->nil)
+    if (z)
     {
-        x = z->right;
-        RB_transplant(T, z, z->right);
-    }
-    else if (z->right == T->nil)
-    {
-        x = z->right;
-        RB_transplant(T, z, z->left);
-    }
-    else
-    {
-        y = tree_minimum(T, z->right);
-        yOriginalcolor = y->color;
-        x = y->right;
-        if (y->parent == z)
-            x->parent = y;
+        if (z->left == T->nil)
+        {
+            x = z->right;
+            RB_transplant(T, z, z->right);
+        }
+        else if (z->right == T->nil)
+        {
+            x = z->left;
+            RB_transplant(T, z, z->left);
+        }
         else
         {
-            RB_transplant(T, y, y->right);
-            y->right = z->right;
-            y->right->parent = y;
+            y = z->right;
+            while (y->left != T->nil)
+               y = y->left;
+            yOriginalcolor = y->color;
+            x = y->right;
+            if (y->parent == z)
+                x->parent = y;
+            else
+            {
+                RB_transplant(T, y, y->right);
+                y->right = z->right;
+                y->right->parent = y;
+            }
+            RB_transplant(T, z, y);
+            y->left = z->left;
+            y->left->parent = y;
+            y->color = z->color;
         }
-        RB_transplant(T, z, y);
-        y->left = z->left;
-        y->left->parent = y;
-        y->color = z->color;
+        if (yOriginalcolor == 1)
+            RB_delete_fixup(T, x);
     }
-    if (yOriginalcolor == 1)
-        RB_delete_fixup(T, x);
 }
 
 void* RB_search(RBTree* T, void* key)//de Int a Void*
@@ -287,18 +318,18 @@ void* RB_search(RBTree* T, void* key)//de Int a Void*
         }
         else
         {
-            if(((!T->lower_than(key, T->current->key)) && (!T->lower_than(T->current->key, key)))
-               {
-                    return T->current->data;
-               }
-               else if (T->lower_than(T->current->key, key)
-               {
-                    T->current = T->current->right;
-               }
-               else 
-               {
-                   T->current = T->current->left;
-               }        
+            if(((!T->lower_than(key, T->current->key)) && (!T->lower_than(T->current->key, key))))
+            {
+                return T->current->data;
+            }
+            else if (T->lower_than(T->current->key, key))
+            {
+                T->current = T->current->right;
+            }
+            else
+            {
+                T->current = T->current->left;
+            }
         }
     }
 }
@@ -307,38 +338,35 @@ void* RB_first(RBTree* T)
 {
     rbt_node* x = T->root;
     if (x != T->nil)
-        return tree_minimum(T, x);
-    return NULL;
+        while(x->left != T->nil)
+            x = x->left;
+
+    T->current = x;
+    return (T->current != T->nil)? T->current->data:NULL;
 }
 
 void* RB_next(RBTree* T)
 {
-    rbt_node* nodo = T->current;
-    rbt_node* aux;
-    
-    if(nodo->right != T->nil)
+    rbt_node* x = T->current;
+    rbt_node* y;
+
+    if (x == T->nil) return NULL;
+
+    if(x->right != T->nil)
     {
-        nodo = nodo->right;
-        while(nodo->left)
-        {
-            nodo = nodo->left;
-        }
-        tree->current = nodo;
-        return tree->current->data;
+        y = x->right;
+        while (y->left != T->nil)
+            y = y->left;
     }
     else
     {
-        aux = nodo->parent;
-        while(aux != T->nil)
+        y = x->parent;
+        while((y != T->nil) && (x == y->right))
         {
-            if(aux->left == nodo)
-            {
-                tree->current = aux;
-                return tree->current->data;
-            }
-            nodo = aux;
-            aux = aux->parent;
+            x = y;
+            y = y->parent;
         }
-        return NULL;
     }
+    T->current = y;
+    return T->current->data;
 }

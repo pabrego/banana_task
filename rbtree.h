@@ -1,10 +1,9 @@
 #ifndef RBTREE_H
 #define RBTREE_H
-#include "Tareas.h"
 
 typedef struct rbtree RBTree;
 
-RBTree* create_RBTree(lower_than);
+RBTree* create_RBTree(int(*lower_than)(void* key1, void* key2));
 
 // Inserta un nuevo "data" al arbol con su respectiva "key".
 void RB_insert(RBTree* T, void* key, void* data);
