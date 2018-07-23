@@ -15,6 +15,7 @@ typedef struct Lista
     Nodo* first;
     Nodo* last;
     Nodo* current;
+    int size;
 } Lista;
 
 Lista* createList();
@@ -24,6 +25,7 @@ void pushBack(Lista*, void*);
 void* last_L(Lista*);
 void* next_L(Lista*);
 void popCurrent(Lista* );
+void* get_size_L(Lista*);
 
 
 

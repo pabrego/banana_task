@@ -9,7 +9,7 @@ Nodo* _createNode(void *data)
     newn->data = data;
     newn->next = NULL;
     newn->prev = NULL;
-    return newn; /* Retornamos dirección del elemento insertado */
+    return newn; /* Retornamos direcciï¿½n del elemento insertado */
 }
 
 Lista* createList()
@@ -18,12 +18,14 @@ Lista* createList()
    list->first=NULL;
    list->current=NULL;
    list->last=NULL;
+   list->size = 0;
    return list;
 }
 
 void pushBack(Lista* list, void* data)
 {
      Nodo* N = _createNode(data);
+     list->size++;
      if(list->first == NULL)
      {
         list->first = N;
@@ -82,10 +84,12 @@ void* next_L(Lista *list)
 void popCurrent(Lista* list)
 {
     Nodo* n;
+    list->size--;
     if (list->first == list->last)
     {
         list->first = NULL;
         list->last = NULL;
+        list->size--;
         free(list->current->data);
         free(list->current);
     }
@@ -118,4 +122,9 @@ void popCurrent(Lista* list)
         free(list->current);
         list->current = n;
     }
+}
+
+void* get_size_L(Lista* list)
+{
+    return list->size;
 }

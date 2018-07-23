@@ -99,8 +99,40 @@ void mostrar_prioridad(RBTree** por_prioridad)
     }
 }
 
-void mostrar_categoria(HashMap* hash_categorias)
+void mostrar_categoria(HashMap* hash_categorias, Lista* list_categoria)
 {
+    int i, op;
+    Categoria* aux = first_L(list_categoria);
+    printf("\n");
+    printf(" _________________________________________ \n" );
+    printf("                                         \n" );
+    for(i=0;i<(int)get_size_L(list_categoria);i++)
+    {
+        printf(" %d.- %s \n", i+1, aux->n_categoria);
+        aux = next_L(list_categoria);
+    }
+    printf(" _________________________________________\n" );
+    scanf("%d", &op);
+    aux = first_L(list_categoria);
+    for(op; op > 1; op--)
+    {
+        aux = next_L(list_categoria);
+    }
+    printf("\n");
+    printf(" _________________________________________ \n" );
+    printf("|                                         |\n" );
+    printf("|   1.-  Ordenadas por fecha.             |\n" );
+    printf("|   2.-  Ordenadas por prioridad.         |\n" );
+    printf("|                                         |\n" );
+    printf("|   0.-  Volver al menú principal.        |\n" );
+    printf("|_________________________________________|\n" );
+
+    switch (opcion)
+    {
+        case 1: mostrar_arbol(aux->por_fecha);break;
+        case 2: mostrar_prioridad(aux->por_priori);break;
+        case 0: break;
+    }
 
 }
 

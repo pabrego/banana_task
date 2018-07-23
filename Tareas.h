@@ -23,6 +23,7 @@ typedef struct Fecha{
     int anio;
 }Fecha;
 
+
 Categoria* crea_n_categoria();
 Fecha* crea_fecha();
 Tarea* crea_tarea();
