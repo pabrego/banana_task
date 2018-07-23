@@ -139,10 +139,6 @@ void mostrar_arbol(RBTree* arbol)
     }
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> ccf292bc57cec4528dc674e2fb580b98cc12a5d9
 void guardar_todo(RBTree* por_fecha)
 {
     FILE* fp = fopen("tareas_guardadas.csv", "w");
@@ -223,7 +219,3 @@ Tarea* leer_tarea(char line[])
     }
     return t;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> ccf292bc57cec4528dc674e2fb580b98cc12a5d9

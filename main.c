@@ -7,8 +7,8 @@
 int main()
 {
     int opcion, i;
-    arbol* todoPorFecha = newRBTree();
-    arbol** todoPorPrioridad = (arbol**)malloc(sizeof(arbol*)*5);
+    RBTree* todoPorFecha = newRBTree();
+    RBTree** todoPorPrioridad = (RBTree**)malloc(sizeof(RBTree*)*5);
     for(i=0;i<5;i++){
         todoPorPrioridad[i] = newRBTree();
     }
@@ -56,6 +56,7 @@ int main()
         break;
     case 0:
         printf("Opcion 0: Salir\n");
+        guardar_todo(todoPorFecha, todoPorPrioridad, categorias);
         break;
     default:
         printf("Opcion invalida\n");
