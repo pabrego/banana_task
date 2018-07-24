@@ -17,7 +17,13 @@ void* RB_search(RBTree* T, void* key);
 // Retorna el "data" raiz del arbol.
 void* RB_first(RBTree* T);
 
+// Retorna el "data" al final del arbol.
+void* RB_last(RBTree* T);
+
 // Retorna el "data" siguiente al actual.
 void* RB_next(RBTree* T);
+
+// Retorna el "data" anterior al actual.
+void* RB_prev(RBTree* T);
 
 #endif // RBTREE_H
