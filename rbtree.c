@@ -370,3 +370,29 @@ void* RB_next(RBTree* T)
     T->current = y;
     return T->current->data;
 }
+
+void* RB_prev(RBTree* T)
+{
+    rbt_node* x = T->current;
+    rbt_node* y;
+
+    if (x == T->nil) return NULL;
+
+    if(x->left != T->nil)
+    {
+        y = x->left;
+        while (y->right != T->nil)
+            y = y->right;
+    }
+    else
+    {
+        y = x->parent;
+        while((y != T->nil) && (x == y->left))
+        {
+            x = y;
+            y = y->parent;
+        }
+    }
+    T->current = y;
+    return T->current->data;
+}
