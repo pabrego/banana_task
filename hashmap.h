@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 #ifndef HASHMAP_H
 #define HASHMAP_H
 
@@ -12,14 +9,14 @@ long hash(long key, long capac);
 
 void enlarge(HashMap* map);
 
-void insert(HashMap* map, long key, void* data);
+void H_insert(HashMap* map, long key, void* data);
 
-void* search(HashMap* map, long key);
+void* H_search(HashMap* map, long key);
 
-void erase(HashMap* map, long key);
+void H_erase(HashMap* map, long key);
 
-void* first(HashMap* map);
+void* H_first(HashMap* map);
 
-void* next(HashMap* map);
+void* H_next(HashMap* map);
 
 #endif

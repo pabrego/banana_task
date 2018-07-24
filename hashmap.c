@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "hashmap.h"
 
 typedef struct nodo{
@@ -10,6 +9,7 @@ typedef struct nodo{
 
 typedef struct HashMap{
     hashElem** hashArray;
+    int current;
     int size; //cant. elementos no nulos
     int capac; //Dimension tabla
 }HashMap;
@@ -19,6 +19,7 @@ HashMap* createHashMap(int capac){
     HashMap* map=(HashMap*) malloc(sizeof(HashMap));
     map->capac=capac;
     map->size=0;
+    map->current = 0;
     map->hashArray = malloc(sizeof(hashElem*)*map->capac);
     for(i=0;i<map->capac;i++)
         map->hashArray[i]=NULL;
@@ -35,10 +36,11 @@ void enlarge(HashMap* map){
     hashElem **old_array=map->hashArray;
     int old_capac=map->capac;
 
-    //se reinicializan las variables de la tabla con el nuevo tamaÃ±o
+    //se reinicializan las variables de la tabla con el nuevo tamaño
     int i;
     map->capac*=2;
     map->size=0;
+    map->current=0;
     map->hashArray = malloc(sizeof(hashElem*)*map->capac);
     for(i=0;i<map->capac;i++) map->hashArray[i]=NULL;
 
@@ -46,7 +48,7 @@ void enlarge(HashMap* map){
     for(i=0;i<old_capac;i++){
        if(old_array[i]){
            if(old_array[i]->data)
-              insert(map, old_array[i]->key, old_array[i]->data);
+              H_insert(map, old_array[i]->key, old_array[i]->data);
            free(old_array[i]);
        }
 
@@ -55,7 +57,7 @@ void enlarge(HashMap* map){
     free(old_array);
 }
 
-void insert(HashMap* map, long key, void* data){
+void H_insert(HashMap* map, long key, void* data){
    int hvalue=hash(key,map->capac);
    if(map->hashArray[hvalue]){ //se busca una casilla disponible a partir de hvalue
        int new_hvalue=-1, i;
@@ -75,7 +77,7 @@ void insert(HashMap* map, long key, void* data){
    if((double)map->size/(double)map->capac > 0.7) enlarge(map); //agranda la tabla
 }
 
-void* search(HashMap* map, long key){
+void* H_search(HashMap* map, long key){
     int i;
     int hvalue=hash(key,map->capac);
     for(i=0;i<map->capac;i++){
@@ -88,7 +90,7 @@ void* search(HashMap* map, long key){
     return NULL;
 }
 
-void erase(HashMap* map, long key){
+void H_erase(HashMap* map, long key){
     int i;
     int hvalue=hash(key,map->capac);
     for(i=0;i<map->capac;i++){
@@ -100,7 +102,7 @@ void erase(HashMap* map, long key){
     }
 }
 
-void* first(HashMap* map){
+void* H_first(HashMap* map){
     int i=0;
     for(i=0;i<map->capac;i++)
         if(map->hashArray[i] && map->hashArray[i]->data) {
@@ -110,7 +112,7 @@ void* first(HashMap* map){
     return NULL;
 }
 
-void* next(HashMap* map){
+void* H_next(HashMap* map){
     int i=0;
     for(i=map->current+1;i<map->capac;i++){
         if(map->hashArray[i] && map->hashArray[i]->data) {
