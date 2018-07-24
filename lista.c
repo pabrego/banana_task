@@ -2,52 +2,68 @@
 #include <stdlib.h>
 #include "lista.h"
 
-Nodo* _createNode(void *data)
+typedef struct Nodo
 {
-    Nodo *newn;
+    struct Nodo* prev;
+    struct Nodo* next;
+    void* data;
+} Nodo;
+
+typedef struct Lista
+{
+    Nodo* first;
+    Nodo* last;
+    Nodo* current;
+    int size;
+} Lista;
+
+Nodo* _createNode(void* data)
+{
+    Nodo* newn;
     newn = (Nodo*)malloc(sizeof(Nodo));
     newn->data = data;
     newn->next = NULL;
     newn->prev = NULL;
-    return newn; /* Retornamos direcci�n del elemento insertado */
+    return newn; /* Retornamos direccion del elemento insertado */
 }
 
 Lista* createList()
 {
-   Lista* list=(Lista*) malloc (sizeof(Lista));
-   list->first=NULL;
-   list->current=NULL;
-   list->last=NULL;
-   list->size = 0;
-   return list;
+   Lista* L = (Lista*) malloc(sizeof(Lista));
+   L->first = NULL;
+   L->current = NULL;
+   L->last = NULL;
+   L->size = 0;
+   return L;
 }
 
-void pushBack(Lista* list, void* data)
+void L_pushBack(Lista* L, void* data)
 {
      Nodo* N = _createNode(data);
-     list->size++;
-     if(list->first == NULL)
+     L->size++;
+     if(L->first == NULL)
      {
-        list->first = N;
-        list->last = N;
-        list->current = N;
+        L->first = N;
+        L->last = N;
+        L->current = N;
      }
      else
      {
-        list->current->next = N;
-        N->prev = list->current;
-        list->last = N;
-        list->current = N;
+        L->current->next = N;
+        N->prev = L->current;
+        L->last = N;
+        L->current = N;
      }
 }
 
-void* last_L(Lista* list)
+void* L_last(Lista* L)
 {
     void* ptr;
-    if (list->last != NULL){
-    ptr = list->last->data;
-    return ptr;
-    list->current = list->last;
+    if (L->last != NULL)
+    {
+        ptr = L->last->data;
+        L->current = L->last;
+        return ptr;
     }
     else
     {
@@ -55,76 +71,78 @@ void* last_L(Lista* list)
     }
 }
 
-void* first_L(Lista* list)
+void* L_first(Lista* L)
 {
     void* ptr;
-    if (list->first != NULL){
-    ptr = list->first->data;
-    list->current = list->first;
-    return ptr;
+    if (L->first != NULL)
+    {
+        ptr = L->first->data;
+        L->current = L->first;
+        return ptr;
     }
     else
     {
         return NULL;
     }
 }
-void* next_L(Lista *list)
+void* L_next(Lista *L)
 {
     void* ptr;
-    if (list->current->next != NULL){
-    ptr = list->current->next->data;
-    list->current = list->current->next;
-    return ptr;
+    if (L->current->next != NULL)
+    {
+        ptr = L->current->next->data;
+        L->current = L->current->next;
+        return ptr;
     }
     else
     {
         return NULL;
     }
 }
-void popCurrent(Lista* list)
+void L_popCurrent(Lista* L)
 {
     Nodo* n;
-    list->size--;
-    if (list->first == list->last)
+    L->size--;
+    if (L->first == L->last)
     {
-        list->first = NULL;
-        list->last = NULL;
-        list->size--;
-        free(list->current->data);
-        free(list->current);
+        L->first = NULL;
+        L->last = NULL;
+        L->size--;
+        free(L->current->data);
+        free(L->current);
     }
-    else if(list->current == list->last)
+    else if(L->current == L->last)
     {
-        list->last = list->current->prev;
-        list->current->prev = NULL;
-        list->last->next = NULL;
-        free(list->current->data);
-        free(list->current);
-        list->current = list->last;
+        L->last = L->current->prev;
+        L->current->prev = NULL;
+        L->last->next = NULL;
+        free(L->current->data);
+        free(L->current);
+        L->current = L->last;
     }
-    else if(list->current == list->first)
+    else if(L->current == L->first)
     {
-        list->first = list->current->next;
-        list->current->prev = NULL;
-        list->current->next = NULL;
-        free(list->current->data);
-        free(list->current);
-        list->current = list->first;
+        L->first = L->current->next;
+        L->current->prev = NULL;
+        L->current->next = NULL;
+        free(L->current->data);
+        free(L->current);
+        L->current = L->first;
     }
     else
     {
-        n = list->current->next;
-        list->current->prev->next = n;
-        list->current->next->prev = list->current->prev;
-        list->current->next = NULL;
-        list->current->prev = NULL;
-        free(list->current->data);
-        free(list->current);
-        list->current = n;
+        n = L->current->next;
+        L->current->prev->next = n;
+        L->current->next->prev = L->current->prev;
+        L->current->next = NULL;
+        L->current->prev = NULL;
+        free(L->current->data);
+        free(L->current);
+        L->current = n;
     }
 }
 
-void* get_size_L(Lista* list)
+int L_get_size(Lista* L)
 {
-    return list->size;
+    return L->size;
 }

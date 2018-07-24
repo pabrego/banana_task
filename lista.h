@@ -1,33 +1,22 @@
 #ifndef LISTA_H
 #define LISTA_H
 
+
 typedef struct Lista Lista;
 
-typedef struct Nodo
-{
-    struct Nodo* prev;
-    struct Nodo* next;
-    void* data;
-} Nodo;
-
-typedef struct Lista
-{
-    Nodo* first;
-    Nodo* last;
-    Nodo* current;
-    int size;
-} Lista;
-
 Lista* createList();
-Nodo* _createNode(void*);
-void* first_L(Lista*);
-void pushBack(Lista*, void*);
-void* last_L(Lista*);
-void* next_L(Lista*);
-void popCurrent(Lista* );
-void* get_size_L(Lista*);
 
+void L_pushBack(Lista* L, void* data);
 
+void L_popCurrent(Lista* L);
+
+void* L_first(Lista* L);
+
+void* L_last(Lista* L);
+
+void* L_next(Lista* L);
+
+int L_get_size(Lista* L);
 
 
 #endif // LISTA_H
