@@ -3,45 +3,63 @@
 #include <string.h>
 #include "Tareas.h"
 
-int lower_than(Fecha* key_1, Fecha* key_2)
+int lower_than(Tarea* key_1, Tarea* key_2)
 {
-    if(key_1->anio < key_2->anio)
-    {
-        return 1;
-    }
-    else if(key_1->anio > key_2->anio)
-    {
-        return 0;
-    }
-    else
-    {
-        if(key_1->mes < key_2->mes)
+        if(key_1->fecha->anio < key_2->fecha->anio)
         {
             return 1;
         }
-        else if (key_1->mes > key_2->mes)
+        else if(key_1->fecha->anio > key_2->fecha->anio)
         {
             return 0;
         }
         else
         {
-            if(key_1->dia < key_2->dia)
+            if(key_1->fecha->mes < key_2->fecha->mes)
             {
                 return 1;
             }
-            else
+            else if (key_1->fecha->mes > key_2->fecha->mes)
             {
                 return 0;
             }
+            else
+            {
+                if(key_1->fecha->dia < key_2->fecha->dia)
+                {
+                    return 1;
+                }
+                else if (key_1->fecha->dia > key_2->fecha->dia)
+                {
+                    return 0;
+                }
+                else
+                {
+                    if(strcmp(key_1->nombre, key_2->nombre) < 0)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+            }
         }
-    }
 }
 
-Categoria* crea_n_categoria(){
+Categoria* crea_n_categoria(char* nombre)
+{
+    int i;
+    RBTree** Array = (RBTree**)malloc(sizeof(RBTree*)*5);
     Categoria* nodo = (Categoria*) malloc(sizeof(Categoria));
-    nodo->n_categoria = (char*) malloc(sizeof(char)*16);
-  /*nodo->por_cate = create_treeMap();
-    nodo->por_fecha = create_treeMap();*/
+    for(i=0; i<5; i++)
+    {
+        Array[i] = create_RBTree((int(*)(void*, void*))(lower_than));       //R E V I S A R
+    }
+    nodo->n_categoria = nombre;
+    nodo->por_prioridad = Array;
+    nodo->por_fecha = create_RBTree((int(*)(void*, void*))(lower_than));
     return nodo;
 }
 
@@ -62,6 +80,96 @@ Tarea* crea_tarea(){
     nodo->estado = 0;
     nodo->fecha = crea_fecha();
     return nodo;
+}
+
+int buscar_categoria(char* nombre_categoria, Lista* lista_categoria)
+{
+    char* categoria;
+
+    categoria = first_L(lista_categoria);
+
+    while(categoria != NULL)
+    {
+        if(strcmp(nombre_categoria, categoria) == 0)
+        {
+            return 1;
+        }
+        categoria = next_L(lista_categoria);
+    }
+
+    return 0;
+}
+
+void agregar_tarea(HashMap* M_categorias, Lista* N_categorias, RBTree* G_fecha, RBTree** Array_prioridad)
+{
+    int opcion;
+    char* aux;
+    Tarea* nodo = crea_tarea();
+    Categoria* nodo_cat = NULL;// = crear_categoria();
+
+    while(1)
+    {
+        printf("Ingrese la categoria de la tarea\n");
+        printf("Lista de categorias existentes:\n");
+        aux = first_L(N_categorias);
+
+        while(aux)
+        {
+            printf("%s\n", aux);
+        }
+        free(aux);
+        aux = (char*)malloc(sizeof(char)*16);
+        scanf(" ");
+        fgets(aux, 15, stdin);
+        aux[strlen(aux)-1] = '\0';
+
+        if(buscar_categoria(aux, N_categorias) == 0)
+        {
+            printf("La categoria ingresada no existe.\nDesea agregarla?\n");
+            printf("1. Si\n2. No\n");
+seleccion:  scanf("%d", &opcion);
+            switch (opcion)
+            {
+            case 1:
+                nodo_cat = crea_n_categoria(aux);
+                pushBack(N_categorias, aux);
+                insert_H(M_categorias, (long)aux, nodo);
+                break;
+            case 2:
+                printf("Porfavor, seleccione una categoria existente.\n");
+            default:
+                printf("Porfavor, seleccione una opcion valida.\n");
+                goto seleccion;
+            }
+        }
+    }
+
+    nodo->categoria = aux;
+
+    printf("Ingrese el nombre de la tarea:\n");
+    fgets(nodo->nombre, 30, stdin);
+    nodo->nombre[strlen(nodo->nombre)-1] = '\0';
+
+    printf("Ingrese la descripcion de la tarea:\n");
+    fgets(nodo->descripcion, 140, stdin);
+    nodo->descripcion[strlen(nodo->descripcion) -1] = '\0';
+
+
+    printf("Del 1 al 5, ingrese la prioridad de la tarea:\n");
+    while((nodo->prioridad<1) || (nodo->prioridad>5))
+    {
+        scanf("%d", &nodo->prioridad);
+        if((nodo->prioridad>5) || (nodo->prioridad<1))
+        {
+            printf("Porfavor, ingrese una prioridad valida:\n");
+        }
+    }
+
+    RB_insert(G_fecha, nodo, nodo);
+    RB_insert(Array_prioridad[(nodo->prioridad)-1], nodo, nodo);
+    nodo_cat = search(M_categorias, (long)nodo->categoria);
+    RB_insert(nodo_cat->por_prioridad[(int)(nodo->prioridad)-1],nodo, nodo);
+    RB_insert(nodo_cat->por_fecha, nodo, nodo);
 }
 
 void mostrar_todo(HashMap* hash_categorias, RBTree* por_fecha, RBTree** por_prioridad)
