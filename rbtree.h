@@ -1,6 +1,7 @@
 #ifndef RBTREE_H
 #define RBTREE_H
 
+
 typedef struct rbtree RBTree;
 
 RBTree* create_RBTree(int(*lower_than)(void* key1, void* key2));
@@ -25,5 +26,6 @@ void* RB_next(RBTree* T);
 
 // Retorna el "data" anterior al actual.
 void* RB_prev(RBTree* T);
+
 
 #endif // RBTREE_H
