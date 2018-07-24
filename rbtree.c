@@ -396,3 +396,14 @@ void* RB_prev(RBTree* T)
     T->current = y;
     return T->current->data;
 }
+
+void* RB_last(RBTree* T)
+{
+    rbt_node* x = T->root;
+    if (x != T->nil)
+        while(x->right != T->nil)
+            x = x->right;
+
+    T->current = x;
+    return (T->current != T->nil)? T->current->data:NULL;
+}
