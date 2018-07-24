@@ -23,12 +23,13 @@ typedef struct Fecha{
     int anio;
 }Fecha;
 
-
-Categoria* crea_n_categoria();
+int lower_than(Tarea*, Tarea*);
+int buscar_categoria(char*, Lista*);
+Categoria* crea_n_categoria(char*);
 Fecha* crea_fecha();
 Tarea* crea_tarea();
-void agregar_tarea();
-void agregar_categoria();
+void agregar_tarea(HashMap*, Lista*, RBTree*, RBTree**);
+void quitar_tarea(HashMap*, Lista*, RBTree*, RBTree**);
 void mostrar_todo(HashMap* hash_categorias, RBTree* por_fecha, RBTree** por_prioridad);
 void mostrar_arbol();
 void mostrar_prioridad();
