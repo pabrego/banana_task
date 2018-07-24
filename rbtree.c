@@ -407,3 +407,4 @@ void* RB_last(RBTree* T)
     T->current = x;
     return (T->current != T->nil)? T->current->data:NULL;
 }
+
