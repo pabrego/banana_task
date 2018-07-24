@@ -2,26 +2,11 @@
 #define TAREAS_H
 #include <string.h>
 
-typedef struct Tarea{
-    char* categoria;
-    char* nombre;
-    char* descripcion;
-    int prioridad;
-    struct Fecha* fecha;
-    int estado;
-}Tarea;
+typedef struct Tarea Tarea;
 
-typedef struct Categoria{
-    RBTree* por_fecha;
-    RBTree** por_priori;
-    char* n_categoria;
-}Categoria;
+typedef struct Categoria Categoria;
 
-typedef struct Fecha{
-    int dia;
-    int mes;
-    int anio;
-}Fecha;
+typedef struct Fecha Fecha;
 
 int lower_than(Tarea*, Tarea*);
 int buscar_categoria(char*, Lista*);
