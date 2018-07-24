@@ -3,6 +3,27 @@
 #include <string.h>
 #include "Tareas.h"
 
+typedef struct Tarea{
+    char* categoria;
+    char* nombre;
+    char* descripcion;
+    int prioridad;
+    struct Fecha* fecha;
+    int estado;
+}Tarea;
+ 
+typedef struct Categoria{
+    RBTree* por_fecha;
+    RBTree** por_priori;
+    char* n_categoria;
+}Categoria;
+ 
+typedef struct Fecha{
+    int dia;
+    int mes;
+    int anio;
+}Fecha;
+
 int lower_than(Tarea* key_1, Tarea* key_2)
 {
         if(key_1->fecha->anio < key_2->fecha->anio)
