@@ -126,8 +126,6 @@ void agregar_tarea(Lista* Categorias, RBTree* todoPorFecha, RBTree** todoPorPrio
     Tarea* nodo = crea_tarea();
     Categoria* nodo_cat;
 
-    while(1)
-    {
         printf("Ingrese la categoria de la tarea\n");
         printf("Lista de categorias existentes:\n");
         nodo_cat = L_first(Categorias);
@@ -158,12 +156,11 @@ void agregar_tarea(Lista* Categorias, RBTree* todoPorFecha, RBTree** todoPorPrio
                     printf("Porfavor, seleccione una categoria existente\n");
                 }
             }
-            else
+            else if(nodo_cat != NULL)
             {
                 break;
             }
         }
-    }
     printf("Ingrese el nombre de la tarea:\n");
     fgets(nodo->nombre, 30, stdin);
     nodo->nombre[strlen(nodo->nombre)-1] = '\0';
