@@ -9,12 +9,12 @@ typedef struct Categoria Categoria;
 typedef struct Fecha Fecha;
 
 int lower_than(Tarea*, Tarea*);
-int buscar_categoria(char*, Lista*);
+Categoria* buscar_categoria(Lista*, char*);
 Categoria* crea_n_categoria(char*);
 Fecha* crea_fecha();
 Tarea* crea_tarea();
-void agregar_tarea(HashMap*, Lista*, RBTree*, RBTree**);
-void quitar_tarea(HashMap*, Lista*, RBTree*, RBTree**);
+void agregar_tarea(Lista*, RBTree*, RBTree**);
+void quitar_tarea(Lista*, RBTree*, RBTree**);
 void mostrar_todo(HashMap* hash_categorias, RBTree* por_fecha, RBTree** por_prioridad);
 void mostrar_arbol();
 void mostrar_prioridad();
