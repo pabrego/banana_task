@@ -122,49 +122,56 @@ void agregar_tarea(Lista* Categorias, RBTree* todoPorFecha, RBTree** todoPorPrio
 {
     system("cls");
     int opcion;
-    char* nombre;
+    char* n_categoria;
     Tarea* nodo = crea_tarea();
     Categoria* nodo_cat;
-
-    printf("Ingrese la categoria de la tarea\n");
-    printf("Lista de categorias existentes:\n");
     nodo_cat = L_first(Categorias);
 
-    while(nodo_cat)
-    {
-        printf("%s\n", nodo_cat->n_categoria);
-        nodo_cat = L_next(Categorias);
-    }
-    free(nodo_cat);
-    nombre = (char*)malloc(sizeof(char)*16);
-    while (1)
-    {
-        fgets(nombre, 15, stdin);
-        nombre[strlen(nombre)-1] = '\0';
-        nodo_cat = buscar_categoria(nombre, Categorias);
-        if(nodo_cat == NULL)
+        if(nodo_cat != NULL)
         {
-            printf("La categoria ingresada no existe.\n ¿Desea agregarla?\n1. Si \n2. No\n");
-            scanf("%d", &opcion);
-            switch (opcion)
+            printf("Lista de categorias existentes:\n");
+            while(nodo_cat)
             {
-                case 1:
-                    nodo_cat = crea_n_categoria(nombre);
-                    break;
-                case 2:
-                    printf("Porfavor, seleccione una categoria existente\n");
-                    break;
-                default:
-                    printf("ingrese opcion valida\n");
-                    break;
+                printf("%s\n", nodo_cat->n_categoria);
+                nodo_cat = L_next(Categorias);
+
             }
         }
         else
         {
-            break;
+            printf("No hay categorias existentes.\n");
         }
-    }
+        free(nodo_cat);
+        n_categoria = (char*)malloc(sizeof(char)*16);
 
+        printf("Ingrese la categoria de la tarea:\n");
+
+
+
+        while (nodo_cat == NULL)
+        {
+            scanf(" ");
+            fgets(n_categoria, 15, stdin);
+            n_categoria[strlen(n_categoria)-1] = '\0';
+            nodo_cat = buscar_categoria(Categorias, n_categoria);
+            if(nodo_cat == NULL)
+            {
+                printf("La categoria ingresada no existe.\n Desea agregarla?\n1. Si 2.No\n");
+                scanf("%d", &opcion);
+                getchar();
+                switch (opcion)
+                {
+                case 1:
+                    nodo_cat = crea_n_categoria(n_categoria);
+                    break;
+                case 2:
+                    printf("Porfavor, seleccione una categoria existente\n");
+                }
+                nodo->categoria = n_categoria;
+            }
+        }
+
+   // nombre = (char*) malloc(sizeof(char)*31);
     printf("Ingrese el nombre de la tarea:\n");
     fgets(nodo->nombre, 30, stdin);
     nodo->nombre[strlen(nodo->nombre)-1] = '\0';
@@ -184,11 +191,23 @@ void agregar_tarea(Lista* Categorias, RBTree* todoPorFecha, RBTree** todoPorPrio
         }
     }
 
+    printf("Inserte la fecha de la tarea:\n");
+    printf("Ingrese el dia:  ");
+    scanf("%d", &nodo->fecha->dia);
+    printf("\n");
+    printf("Ingrese el mes:  ");
+    scanf("%d", &nodo->fecha->mes);
+    printf("\n");
+    printf("Ingrese el a%co:  ", 164);
+    scanf("%d", &nodo->fecha->anio);
+    printf("\n");
+
     RB_insert(todoPorFecha, nodo, nodo);
     RB_insert(todoPorPrioridad[(nodo->prioridad)-1], nodo, nodo);
     RB_insert(nodo_cat->por_fecha, nodo, nodo);
     RB_insert(nodo_cat->por_prioridad[(nodo->prioridad)-1], nodo, nodo);
     L_pushBack(Categorias, nodo_cat);
+    system("cls");
 }
 
 void quitar_tarea(Lista* Categorias, RBTree* todoPorFecha, RBTree** todoPorPrioridad)
@@ -197,11 +216,13 @@ void quitar_tarea(Lista* Categorias, RBTree* todoPorFecha, RBTree** todoPorPrior
     char cadena[31];
     int opcion;
     Tarea* nodo;
+
     Categoria* nodo_cat = NULL;
 
     printf("¿Desea imprimir todos los nombres de las tareas existentes?\n");
     printf("1. Si   2. No\n");
 pregunta: scanf("%d", &opcion);
+    getchar();
     if(opcion == 1)
     {
         nodo = RB_first(todoPorFecha);
@@ -221,23 +242,24 @@ pregunta: scanf("%d", &opcion);
     cadena[strlen(cadena)-1] = '\0';
 
     nodo = RB_first(todoPorFecha);
-        while (nodo)
+    while (nodo)
+    {
+        if(strcmp(nodo->nombre, cadena) == 0)
         {
-            if(strcmp(nodo->nombre, cadena) == 0)
-            {
-                RB_delete(todoPorFecha, nodo);
-                RB_delete(todoPorPrioridad[(nodo->prioridad)-1], nodo);
-                nodo_cat = buscar_categoria(Categorias, cadena);
-                RB_delete(nodo_cat->por_fecha, nodo);
-                RB_delete(nodo_cat->por_prioridad[(nodo->prioridad)-1], nodo);
-                printf("Tarea %s exitosamente elimindada\n", cadena);
-            }
+            nodo_cat = buscar_categoria(Categorias, nodo->categoria);
+            RB_delete(todoPorFecha, nodo);
+            RB_delete(todoPorPrioridad[(nodo->prioridad)-1], nodo);
+            RB_delete(nodo_cat->por_fecha, nodo);
+            RB_delete(nodo_cat->por_prioridad[(nodo->prioridad)-1], nodo);
+            free(nodo);
+            printf("Tarea %s exitosamente elimindada\n", cadena);
         }
-
-        if(nodo == NULL)
+        else
         {
-            printf("La tarea ingresada no existe.\n");
+            nodo = RB_next(todoPorFecha);
         }
+    }
+    system("cls");
 }
 
 
