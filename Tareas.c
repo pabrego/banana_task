@@ -387,19 +387,22 @@ void mostrar_arbol(RBTree* arbol)
 void guardar_todo(RBTree* por_fecha)
 {
     FILE* fp = fopen("tareas_guardadas.csv", "w");
-    Tarea* imprimir = first(por_fecha);
-    int* day = imprimir->fecha->dia;
-    int* month = imprimir->fecha->mes;
-    int* year = imprimir->fecha->anio;
-    char* name = imprimir->nombre;
-    int* priority = imprimir->prioridad;
-    char* category = imprimir->categoria;
-    int* activa = imprimir->estado;
-    char* desc = imprimir->descripcion;
+    Tarea* imprimir = RB_first(por_fecha);
+    int day, month, year, priority, activa;
+    char* name, category, desc;
+
     while(imprimir)
     {
-        fprintf(fp, "%d,%d,%d,%d,%s,%s,%d\n", day, month, year, priority, name, desc, category, activa);
-        imprimir = next(por_fecha);
+        day = imprimir->fecha->dia;
+        month = imprimir->fecha->mes;
+        year = imprimir->fecha->anio;
+        name = imprimir->nombre;
+        priority = imprimir->prioridad;
+        category = imprimir->categoria;
+        activa = imprimir->estado;
+        desc = imprimir->descripcion;
+        fprintf(fp, "%d,%d,%d,%d,%s,%s,%s,%d\n", day, month, year, priority, name, desc, category, activa);
+        imprimir = RB_next(por_fecha);
     }
     fclose(fp);
 }
