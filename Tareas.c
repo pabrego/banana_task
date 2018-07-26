@@ -126,41 +126,45 @@ void agregar_tarea(Lista* Categorias, RBTree* todoPorFecha, RBTree** todoPorPrio
     Tarea* nodo = crea_tarea();
     Categoria* nodo_cat;
 
-        printf("Ingrese la categoria de la tarea\n");
-        printf("Lista de categorias existentes:\n");
-        nodo_cat = L_first(Categorias);
+    printf("Ingrese la categoria de la tarea\n");
+    printf("Lista de categorias existentes:\n");
+    nodo_cat = L_first(Categorias);
 
-        while(nodo_cat)
+    while(nodo_cat)
+    {
+        printf("%s\n", nodo_cat->n_categoria);
+        nodo_cat = L_next(Categorias);
+    }
+    free(nodo_cat);
+    nombre = (char*)malloc(sizeof(char)*16);
+    while (1)
+    {
+        fgets(nombre, 15, stdin);
+        nombre[strlen(nombre)-1] = '\0';
+        nodo_cat = buscar_categoria(nombre, Categorias);
+        if(nodo_cat == NULL)
         {
-            printf("%s\n", nodo_cat->n_categoria);
-            nodo_cat = L_next(Categorias);
-
-        }
-        free(nodo_cat);
-        nombre = (char*)malloc(sizeof(char)*16);
-        while (1)
-        {
-            fgets(nombre, 15, stdin);
-            nombre[strlen(nombre)-1] = '\0';
-            nodo_cat = buscar_categoria(Categorias, nombre);
-            if(nodo_cat == NULL)
+            printf("La categoria ingresada no existe.\n ¿Desea agregarla?\n1. Si \n2. No\n");
+            scanf("%d", &opcion);
+            switch (opcion)
             {
-                printf("La categoria ingresada no existe.\n ¿Desea agregarla?\n1. Si 2.No\n");
-                scanf("%d", &opcion);
-                switch (opcion)
-                {
                 case 1:
                     nodo_cat = crea_n_categoria(nombre);
                     break;
                 case 2:
                     printf("Porfavor, seleccione una categoria existente\n");
-                }
-            }
-            else if(nodo_cat != NULL)
-            {
-                break;
+                    break;
+                default:
+                    printf("ingrese opcion valida\n");
+                    break;
             }
         }
+        else
+        {
+            break;
+        }
+    }
+
     printf("Ingrese el nombre de la tarea:\n");
     fgets(nodo->nombre, 30, stdin);
     nodo->nombre[strlen(nodo->nombre)-1] = '\0';
