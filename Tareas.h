@@ -23,6 +23,6 @@ void editar_tarea();
 void quitar_tarea();
 void realizar_tarea();
 void guardar_todo(RBTree* por_fecha);
-void cargar_archivo(HashMap* hash_categorias, RBTree* por_fecha, RBTree** por_prioridad);
+void cargar_archivo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prioridad);
 
 #endif // TAREAS_H
