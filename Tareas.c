@@ -241,7 +241,7 @@ pregunta: scanf("%d", &opcion);
 }
 
 
-void mostrar_todo(HashMap* hash_categorias, RBTree* por_fecha, RBTree** por_prioridad)
+void mostrar_todo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prioridad)
 {
     int opcion;
 
@@ -256,13 +256,15 @@ void mostrar_todo(HashMap* hash_categorias, RBTree* por_fecha, RBTree** por_prio
     printf("|                                         |\n" );
     printf("|   0.-  Volver al menú principal.        |\n" );
     printf("|_________________________________________|\n" );
+    scanf("%d", &opcion);
 
     switch (opcion)
     {
         case 1: mostrar_arbol(por_fecha);break;
         case 2: mostrar_prioridad(por_prioridad);break;
-        case 3: mostrar_categoria(hash_categorias);break;
+        case 3: mostrar_categoria(lista_categorias);break;
         case 0: break;
+        default: printf("Opcion invalida\n");
     }
 
 }
@@ -276,25 +278,23 @@ void mostrar_prioridad(RBTree** por_prioridad)
     }
 }
 
-void mostrar_categoria(HashMap* hash_categorias, Lista* list_categoria)
+void mostrar_categoria(Lista* list_categoria)
 {
-    int i, op;
-    Categoria* aux = first_L(list_categoria);
+    int i, opcion, op;
+    Categoria* aux = L_first(list_categoria);
     printf("\n");
     printf(" _________________________________________ \n" );
     printf("                                         \n" );
-    for(i=0;i<(int)get_size_L(list_categoria);i++)
+    for(i=0;i<L_get_size(list_categoria);i++)
     {
         printf(" %d.- %s \n", i+1, aux->n_categoria);
-        aux = next_L(list_categoria);
+        aux = L_next(list_categoria);
     }
     printf(" _________________________________________\n" );
-    scanf("%d", &op);
-    aux = first_L(list_categoria);
-    for(op; op > 1; op--)
-    {
-        aux = next_L(list_categoria);
-    }
+    scanf("%d", &opcion);
+
+
+
     printf("\n");
     printf(" _________________________________________ \n" );
     printf("|                                         |\n" );
@@ -306,35 +306,47 @@ void mostrar_categoria(HashMap* hash_categorias, Lista* list_categoria)
 
     switch (opcion)
     {
-        case 1: mostrar_arbol(aux->por_fecha);break;
-        case 2: mostrar_prioridad(aux->por_priori);break;
+        case 1: mostrar_arbol(aux->por_fecha);
+            break;
+        case 2: mostrar_prioridad(aux->por_prioridad);break;
         case 0: break;
+        default: printf("Opcion invalida\n");
     }
-
 }
 
 void mostrar_arbol(RBTree* arbol)
 {
-    Tarea* imprimir = first(arbol);
-    int* day = imprimir->fecha->dia;
-    int* month = imprimir->fecha->mes;
-    int* year = imprimir->fecha->anio;
-    char* name = imprimir->nombre;
-    int* priority = imprimir->prioridad;
-    char* category = imprimir->categoria;
-    int* activa = imprimir->estado;
-    while(imprimir){
-        if(*priority == 1)
+    Tarea* imprimir = RB_first(arbol);
+    int i, day, month, year, priority, activa, op;
+    char* name;
+    char* category;
+    for(i=0;imprimir;i++){
+        day = imprimir->fecha->dia;
+        month = imprimir->fecha->mes;
+        year = imprimir->fecha->anio;
+        name = imprimir->nombre;
+        priority = imprimir->prioridad;
+        category = imprimir->categoria;
+        activa = imprimir->estado;
+        if(priority == 1)
         {
-            printf("|%d/%d/%d  Baja   %s  %s ",day, month, year, name, category);
+            printf("|%d.- %d/%d/%d  Muy Baja   %s  %s ",i+1 ,day, month, year, name, category);
         }
-        else if(*priority == 2)
+        else if(priority == 2)
         {
-            printf("|%d/%d/%d  Media  %s  %s ",day, month, year, name, category);
+            printf("|%d.- %d/%d/%d  Baja  %s  %s ", i+1 ,day, month, year, name, category);
         }
-        else if(*priority == 3)
+        else if(priority == 3)
         {
-            printf("|%d/%d/%d  Alta   %s  %s ",day, month, year, name, category);
+            printf("|%d.- %d/%d/%d  Media   %s  %s ", i+1,day, month, year, name, category);
+        }
+        else if(priority == 4)
+        {
+            printf("|%d.- %d/%d/%d  Alta   %s  %s ", i+1, day, month, year, name, category);
+        }
+        else if(priority == 5)
+        {
+            printf("|%d.- %d/%d/%d  Muy Alta   %s  %s ", i+1 ,day, month, year, name, category);
         }
         if(activa)
         {
@@ -344,9 +356,11 @@ void mostrar_arbol(RBTree* arbol)
         {
             printf(" Realizada \n");
         }
-        imprimir = next(arbol);
+        imprimir = RB_next(arbol);
     }
+
 }
+
 
 void guardar_todo(RBTree* por_fecha)
 {
