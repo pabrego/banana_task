@@ -290,11 +290,10 @@ void mostrar_todo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prior
     }
 
 }
-
 void mostrar_prioridad(RBTree** por_prioridad)
 {
     int i;
-    for(i=0;i<5;i++)
+    for(i=4;i>=0;i--)
     {
         mostrar_arbol(por_prioridad[i]);
     }
