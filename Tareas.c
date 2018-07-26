@@ -302,7 +302,7 @@ void mostrar_prioridad(RBTree** por_prioridad)
 
 void mostrar_categoria(Lista* list_categoria)
 {
-    int i, opcion, op;
+    int i, opcion;
     Categoria* aux = L_first(list_categoria);
     printf("\n");
     printf(" _________________________________________ \n" );
@@ -339,7 +339,7 @@ void mostrar_categoria(Lista* list_categoria)
 void mostrar_arbol(RBTree* arbol)
 {
     Tarea* imprimir = RB_first(arbol);
-    int i, day, month, year, priority, activa, op;
+    int i, day, month, year, priority, activa;
     char* name;
     char* category;
     for(i=0;imprimir;i++){
@@ -384,6 +384,44 @@ void mostrar_arbol(RBTree* arbol)
 }
 
 
+Tarea* leer_tarea(char line[])
+{
+    Tarea* t = crea_tarea();
+    const char s[2] = ",";
+    char *token;
+
+    token = strtok(line, s);
+    token[strlen(token)-1]='\0';
+    t->fecha->dia = atoi(token);
+
+    token = strtok(NULL, s);
+    token[strlen(token)-1]='\0';
+    t->fecha->mes = atoi(token);
+
+    token = strtok(NULL, s);
+    token[strlen(token)-1]='\0';
+    t->fecha->anio = atoi(token);
+
+    token = strtok(NULL, s);
+    token[strlen(token)-1]='\0';
+    strcpy(t->nombre, token);
+
+    token = strtok(NULL, s);
+    token[strlen(token)-1]='\0';
+    strcpy(t->descripcion, token);
+
+    token = strtok(NULL, s);
+    token[strlen(token)-1]='\0';
+    strcpy(t->categoria, token);
+
+    token = strtok(NULL,s);
+    if(token != NULL)
+    {
+        t->estado = atoi(token);
+    }
+    return t;
+}
+
 void guardar_todo(RBTree* por_fecha)
 {
     FILE* fp = fopen("tareas_guardadas.csv", "w");
@@ -407,15 +445,15 @@ void guardar_todo(RBTree* por_fecha)
     fclose(fp);
 }
 
-void cargar_archivo(HashMap* hash_categorias, RBTree* por_fecha, RBTree** por_prioridad)
+void cargar_archivo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prioridad)
 {
     FILE* fp = fopen("tareas_guardadas.csv","r");
     if(fp == NULL){
         printf("error de lectura\n");exit(0);
     }
     Tarea* aux;
-    Categoria* category;
-    char* linea[250];
+    Categoria* category = L_first(lista_categorias);
+    char linea[250];
     int i;
     while(fgets(linea, 250, fp))
     {
@@ -423,47 +461,21 @@ void cargar_archivo(HashMap* hash_categorias, RBTree* por_fecha, RBTree** por_pr
         aux = leer_tarea(linea);
         RB_insert(por_fecha, aux->fecha, aux);
         RB_insert(por_prioridad[aux->prioridad - 1], aux->fecha, aux);
-        category = hp_search(hash_categorias, atoi(aux->categoria));
-        RB_insert(category->por_fecha, aux->flecha, aux);
+        for(i=0;i<L_get_size(lista_categorias);i++)
+        {
+            if(!strcmp(aux->categoria, category->n_categoria))
+            {
+                break;
+            }
+            else
+            {
+                category = L_next(lista_categorias);
+            }
+        }
+
+        RB_insert(category->por_fecha, aux->fecha, aux);
         RB_insert(category->por_prioridad[aux->prioridad - 1], aux->fecha, aux);
     }
 
 }
 
-Tarea* leer_tarea(char line[])
-{
-    t = crea_tarea();
-    const char s[2] = ",";
-    char *token;
-
-    token = strtok(line, s);
-    token[strlen(token)-1]='\0';
-    t->dia = atoi(token);
-
-    token = strtok(NULL, s);
-    token[strlen(token)-1]='\0';
-    t->mes = atoi(token);
-
-    token = strtok(NULL, s);
-    token[strlen(token)-1]='\0';
-    t->anio = atoi(token);
-
-    token = strtok(NULL, s);
-    token[strlen(token)-1]='\0';
-    strcpy(p->nombre, token);
-
-    token = strtok(NULL, s);
-    token[strlen(token)-1]='\0';
-    strcpy(p->descripcion, token);
-
-    token = strtok(NULL, s);
-    token[strlen(token)-1]='\0';
-    strcpy(p->categoria, token);
-
-    token = strtok(NULL,caracter);
-    if(token != NULL)
-    {
-        p->estado = atoi(token);
-    }
-    return t;
-}
