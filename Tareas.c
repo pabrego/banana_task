@@ -131,47 +131,46 @@ void agregar_tarea(Lista* Categorias, RBTree* todoPorFecha, RBTree** todoPorPrio
     Tarea* nodo = crea_tarea();
     Categoria* nodo_cat;
     nodo_cat = L_first(Categorias);
-
-        if(nodo_cat != NULL)
+    if(nodo_cat != NULL)
+    {
+        printf("Lista de categorias existentes:\n");
+        while(nodo_cat)
         {
-            printf("Lista de categorias existentes:\n");
-            while(nodo_cat)
-            {
-                printf("%s\n", nodo_cat->n_categoria);
-                nodo_cat = L_next(Categorias);
+            printf("%s\n", nodo_cat->n_categoria);
+            nodo_cat = L_next(Categorias);
 
+        }
+    }
+    else
+    {
+        printf("No hay categorias existentes.\n");
+    }
+    free(nodo_cat);
+    n_categoria = (char*)malloc(sizeof(char)*16);
+
+    printf("Ingrese la categoria de la tarea:\n");
+
+    while (nodo_cat == NULL)
+    {
+        scanf(" ");
+        fgets(n_categoria, 15, stdin);
+        n_categoria[strlen(n_categoria)-1] = '\0';
+        nodo_cat = buscar_categoria(Categorias, n_categoria);
+        if(nodo_cat == NULL)
+        {
+            printf("La categoria ingresada no existe.\n Desea agregarla?\n1. Si 2.No\n");
+            scanf("%d", &opcion);
+            getchar();
+            switch (opcion)
+            {
+            case 1:
+                nodo_cat = crea_n_categoria(n_categoria);
+                break;
+            case 2:
+                printf("Porfavor, seleccione una categoria existente\n");
             }
         }
-        else
-        {
-            printf("No hay categorias existentes.\n");
-        }
-        free(nodo_cat);
-        n_categoria = (char*)malloc(sizeof(char)*16);
-
-        printf("Ingrese la categoria de la tarea:\n");
-
-        while (nodo_cat == NULL)
-        {
-            scanf(" ");
-            fgets(n_categoria, 15, stdin);
-            n_categoria[strlen(n_categoria)-1] = '\0';
-            nodo_cat = buscar_categoria(Categorias, n_categoria);
-            if(nodo_cat == NULL)
-            {
-                printf("La categoria ingresada no existe.\n Desea agregarla?\n1. Si 2.No\n");
-                scanf("%d", &opcion);
-                getchar();
-                switch (opcion)
-                {
-                case 1:
-                    nodo_cat = crea_n_categoria(n_categoria);
-                    break;
-                case 2:
-                    printf("Porfavor, seleccione una categoria existente\n");
-                }
-            }
-        }
+    }
     nodo->categoria = n_categoria;
     printf("Ingrese el nombre de la tarea:\n");
     fgets(nodo->nombre, 30, stdin);
@@ -403,27 +402,31 @@ Tarea* leer_tarea(char line[])
     char *token;
 
     token = strtok(line, s);
-    token[strlen(token)-1]='\0';
+    token[strlen(token)]='\0';
     t->fecha->dia = atoi(token);
 
     token = strtok(NULL, s);
-    token[strlen(token)-1]='\0';
+    token[strlen(token)]='\0';
     t->fecha->mes = atoi(token);
 
     token = strtok(NULL, s);
-    token[strlen(token)-1]='\0';
+    token[strlen(token)]='\0';
     t->fecha->anio = atoi(token);
 
     token = strtok(NULL, s);
-    token[strlen(token)-1]='\0';
+    token[strlen(token)]='\0';
+    t->prioridad = atoi(token);
+
+    token = strtok(NULL, s);
+    token[strlen(token)]='\0';
     strcpy(t->nombre, token);
 
     token = strtok(NULL, s);
-    token[strlen(token)-1]='\0';
+    token[strlen(token)]='\0';
     strcpy(t->descripcion, token);
 
     token = strtok(NULL, s);
-    token[strlen(token)-1]='\0';
+    token[strlen(token)]='\0';
     strcpy(t->categoria, token);
 
     token = strtok(NULL,s);
