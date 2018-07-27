@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <conio.h>
 #include "lista.h"
 #include "rbtree.h"
 #include "Tareas.h"
@@ -271,28 +272,31 @@ pregunta: scanf("%d", &opcion);
 
 void mostrar_todo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prioridad)
 {
-    system("cls");
     int opcion;
+    seleccionorden: system("cls");
+    printf("\n");
     printf(" _________________________________________ \n" );
     printf("|                                         |\n" );
     printf("|        TODAS:                           |\n" );
     printf("|   1.-  Ordenadas por fecha.             |\n" );
     printf("|   2.-  Ordenadas por prioridad.         |\n" );
-    printf("|                                         |\n" );
-    printf("|   3.-  Revisar categorias.              |\n" );
+    printf("|   3.-  Ordenadas por categoria.         |\n" );
     printf("|                                         |\n" );
     printf("|   0.-  Volver al menu principal.        |\n" );
     printf("|_________________________________________|\n" );
     scanf("%d", &opcion);
 
+    system("cls");
+    printf("\n");
     switch (opcion)
     {
-        case 1: mostrar_arbol(por_fecha); break;
-        case 2: mostrar_prioridad(por_prioridad); break;
-        case 3: mostrar_categoria(lista_categorias); break;
+        case 1: mostrar_arbol(por_fecha); getchar(); goto seleccionorden;
+        case 2: mostrar_prioridad(por_prioridad); getchar(); goto seleccionorden;
+        case 3: mostrar_categoria(lista_categorias); getchar(); goto seleccionorden;
         case 0: break;
         default: printf("Opcion invalida\n");
     }
+    system("cls");
 }
 void mostrar_prioridad(RBTree** por_prioridad)
 {
@@ -305,30 +309,38 @@ void mostrar_prioridad(RBTree** por_prioridad)
 
 void mostrar_categoria(Lista* list_categoria)
 {
+    system("cls");
     int i, opcion;
     Categoria* aux = L_first(list_categoria);
-    printf("\n");
     printf(" _________________________________________ \n" );
-    printf("                                         \n" );
+    printf("\n" );
     for(i=0;i<L_get_size(list_categoria);i++)
     {
         printf(" %d.- %s \n", i+1, aux->n_categoria);
         aux = L_next(list_categoria);
     }
-    printf(" _________________________________________\n" );
+    printf(" _________________________________________ \n" );
+
+    printf("Eliga una de las categorias.\n");
     scanf("%d", &opcion);
-
-
+    aux = L_first(list_categoria);
+    for(i=0;i<L_get_size(list_categoria);i++)
+    {
+        if (opcion == i+1)
+            break;
+        aux = L_next(list_categoria);
+    }
 
     printf("\n");
     printf(" _________________________________________ \n" );
     printf("|                                         |\n" );
-    printf("|   1.-  Ordenadas por fecha.             |\n" );
-    printf("|   2.-  Ordenadas por prioridad.         |\n" );
-    printf("|                                         |\n" );
-    printf("|   0.-  Volver al menú principal.        |\n" );
+    printf("|   1.-  Categorias por fecha.            |\n" );
+    printf("|   2.-  Categorias por prioridad.        |\n" );
     printf("|_________________________________________|\n" );
 
+    scanf("%d", &opcion);
+    system("cls");
+    printf("\n");
     switch (opcion)
     {
         case 1: mostrar_arbol(aux->por_fecha);break;
@@ -371,17 +383,16 @@ void mostrar_arbol(RBTree* arbol)
         {
             printf("|%d.- %d/%d/%d  Muy Alta   %s  %s ", i+1 ,day, month, year, name, category);
         }
-        if(activa)
+        if(!activa)
         {
-            printf("   Activa  \n");
+            printf(" Sin realizar\n");
         }
         else
         {
-            printf(" Realizada \n");
+            printf(" Realizada\n");
         }
         imprimir = RB_next(arbol);
     }
-
 }
 
 
