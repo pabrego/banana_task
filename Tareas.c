@@ -150,8 +150,6 @@ void agregar_tarea(Lista* Categorias, RBTree* todoPorFecha, RBTree** todoPorPrio
 
         printf("Ingrese la categoria de la tarea:\n");
 
-
-
         while (nodo_cat == NULL)
         {
             scanf(" ");
@@ -171,11 +169,9 @@ void agregar_tarea(Lista* Categorias, RBTree* todoPorFecha, RBTree** todoPorPrio
                 case 2:
                     printf("Porfavor, seleccione una categoria existente\n");
                 }
-                nodo->categoria = n_categoria;
             }
         }
-
-   // nombre = (char*) malloc(sizeof(char)*31);
+    nodo->categoria = n_categoria;
     printf("Ingrese el nombre de la tarea:\n");
     fgets(nodo->nombre, 30, stdin);
     nodo->nombre[strlen(nodo->nombre)-1] = '\0';
@@ -210,7 +206,12 @@ void agregar_tarea(Lista* Categorias, RBTree* todoPorFecha, RBTree** todoPorPrio
     RB_insert(todoPorPrioridad[(nodo->prioridad)-1], nodo, nodo);
     RB_insert(nodo_cat->por_fecha, nodo, nodo);
     RB_insert(nodo_cat->por_prioridad[(nodo->prioridad)-1], nodo, nodo);
-    L_pushBack(Categorias, nodo_cat);
+
+    if(opcion == 1)
+    {
+        L_pushBack(Categorias, nodo_cat);
+    }
+
     system("cls");
 }
 
@@ -257,6 +258,7 @@ pregunta: scanf("%d", &opcion);
             RB_delete(nodo_cat->por_prioridad[(nodo->prioridad)-1], nodo);
             free(nodo);
             printf("Tarea %s exitosamente elimindada\n", cadena);
+            getchar();
         }
         else
         {
