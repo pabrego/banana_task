@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lista.h"
+#include "rbtree.h"
 #include "Tareas.h"
+
 
 typedef struct Tarea{
     char* categoria;
@@ -11,18 +14,19 @@ typedef struct Tarea{
     struct Fecha* fecha;
     int estado;
 }Tarea;
- 
+
 typedef struct Categoria{
     RBTree* por_fecha;
-    RBTree** por_priori;
+    RBTree** por_prioridad;
     char* n_categoria;
 }Categoria;
- 
+
 typedef struct Fecha{
     int dia;
     int mes;
     int anio;
 }Fecha;
+
 
 int lower_than(Tarea* key_1, Tarea* key_2)
 {
@@ -146,6 +150,8 @@ void agregar_tarea(Lista* Categorias, RBTree* todoPorFecha, RBTree** todoPorPrio
 
         printf("Ingrese la categoria de la tarea:\n");
 
+
+
         while (nodo_cat == NULL)
         {
             scanf(" ");
@@ -165,9 +171,11 @@ void agregar_tarea(Lista* Categorias, RBTree* todoPorFecha, RBTree** todoPorPrio
                 case 2:
                     printf("Porfavor, seleccione una categoria existente\n");
                 }
+                nodo->categoria = n_categoria;
             }
         }
-    nodo->categoria = n_categoria;
+
+   // nombre = (char*) malloc(sizeof(char)*31);
     printf("Ingrese el nombre de la tarea:\n");
     fgets(nodo->nombre, 30, stdin);
     nodo->nombre[strlen(nodo->nombre)-1] = '\0';
@@ -202,12 +210,7 @@ void agregar_tarea(Lista* Categorias, RBTree* todoPorFecha, RBTree** todoPorPrio
     RB_insert(todoPorPrioridad[(nodo->prioridad)-1], nodo, nodo);
     RB_insert(nodo_cat->por_fecha, nodo, nodo);
     RB_insert(nodo_cat->por_prioridad[(nodo->prioridad)-1], nodo, nodo);
-
-    if(opcion == 1)
-    {
-        L_pushBack(Categorias, nodo_cat);
-    }
-
+    L_pushBack(Categorias, nodo_cat);
     system("cls");
 }
 
@@ -266,9 +269,8 @@ pregunta: scanf("%d", &opcion);
 
 void mostrar_todo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prioridad)
 {
+    system("cls");
     int opcion;
-
-    printf("\n");
     printf(" _________________________________________ \n" );
     printf("|                                         |\n" );
     printf("|        TODAS:                           |\n" );
@@ -277,19 +279,18 @@ void mostrar_todo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prior
     printf("|                                         |\n" );
     printf("|   3.-  Revisar categorias.              |\n" );
     printf("|                                         |\n" );
-    printf("|   0.-  Volver al menú principal.        |\n" );
+    printf("|   0.-  Volver al menu principal.        |\n" );
     printf("|_________________________________________|\n" );
     scanf("%d", &opcion);
 
     switch (opcion)
     {
-        case 1: mostrar_arbol(por_fecha);break;
-        case 2: mostrar_prioridad(por_prioridad);break;
-        case 3: mostrar_categoria(lista_categorias);break;
+        case 1: mostrar_arbol(por_fecha); break;
+        case 2: mostrar_prioridad(por_prioridad); break;
+        case 3: mostrar_categoria(lista_categorias); break;
         case 0: break;
         default: printf("Opcion invalida\n");
     }
-
 }
 void mostrar_prioridad(RBTree** por_prioridad)
 {
@@ -328,8 +329,7 @@ void mostrar_categoria(Lista* list_categoria)
 
     switch (opcion)
     {
-        case 1: mostrar_arbol(aux->por_fecha);
-            break;
+        case 1: mostrar_arbol(aux->por_fecha);break;
         case 2: mostrar_prioridad(aux->por_prioridad);break;
         case 0: break;
         default: printf("Opcion invalida\n");
@@ -340,8 +340,7 @@ void mostrar_arbol(RBTree* arbol)
 {
     Tarea* imprimir = RB_first(arbol);
     int i, day, month, year, priority, activa;
-    char* name;
-    char* category;
+    char* name, *category;
     for(i=0;imprimir;i++){
         day = imprimir->fecha->dia;
         month = imprimir->fecha->mes;
@@ -427,7 +426,7 @@ void guardar_todo(RBTree* por_fecha)
     FILE* fp = fopen("tareas_guardadas.csv", "w");
     Tarea* imprimir = RB_first(por_fecha);
     int day, month, year, priority, activa;
-    char* name, category, desc;
+    char* name, *category, *desc;
 
     while(imprimir)
     {
@@ -476,6 +475,4 @@ void cargar_archivo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_pri
         RB_insert(category->por_fecha, aux->fecha, aux);
         RB_insert(category->por_prioridad[aux->prioridad - 1], aux->fecha, aux);
     }
-
 }
-
