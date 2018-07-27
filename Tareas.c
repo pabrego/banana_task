@@ -467,28 +467,27 @@ void cargar_archivo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_pri
         printf("error de lectura\n");exit(0);
     }
     Tarea* aux;
-    Categoria* category = L_first(lista_categorias);
+    Categoria* category;
     char linea[250];
-    int i;
+    int i, existe;
     while(fgets(linea, 250, fp))
     {
+        existe = 1;
         linea[strlen(linea)-1] = '\0';
         aux = leer_tarea(linea);
+        category = buscar_categoria(aux->categoria, lista_categorias);
+        if(category == NULL)
+        {
+            existe = 0;
+            category = crea_n_categoria(aux->categoria);
+        }
         RB_insert(por_fecha, aux->fecha, aux);
         RB_insert(por_prioridad[aux->prioridad - 1], aux->fecha, aux);
-        for(i=0;i<L_get_size(lista_categorias);i++)
-        {
-            if(!strcmp(aux->categoria, category->n_categoria))
-            {
-                break;
-            }
-            else
-            {
-                category = L_next(lista_categorias);
-            }
-        }
-
         RB_insert(category->por_fecha, aux->fecha, aux);
         RB_insert(category->por_prioridad[aux->prioridad - 1], aux->fecha, aux);
+        if(!existe)
+        {
+            L_pushBack(lista_categorias, category);
+        }
     }
 }
