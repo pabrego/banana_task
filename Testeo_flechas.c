@@ -1,19 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
+#include "menu.h"
 #include "conio.h"
 #include "Tareas.h"
 
-void gotoxy(int x,int y){
-      HANDLE hcon;
-      hcon = GetStdHandle(STD_OUTPUT_HANDLE);
-      COORD dwPos;
-      dwPos.X = x;
-      dwPos.Y= y;
-      SetConsoleCursorPosition(hcon,dwPos);
- }
 int main()
 {
+    ajustar_pantalla();
     RBTree* todoPorFecha = create_RBTree((int(*)(void*, void*))(lower_than));
     RBTree** todoPorPrioridad = (RBTree**) malloc(sizeof(RBTree*)*5);
     Lista* Categorias = createList();
