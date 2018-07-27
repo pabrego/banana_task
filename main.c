@@ -1,21 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
-/*#include <avl-tree.h>
-#include <hashmap.h>*/
 #include "Tareas.h"
 
 int main()
 {
     int opcion, i;
-    RBTree* todoPorFecha = newRBTree();
+    RBTree* todoPorFecha = create_RBTree((int(*)(void*, void*))lower_than);
     RBTree** todoPorPrioridad = (RBTree**)malloc(sizeof(RBTree*)*5);
-    for(i=0;i<5;i++){
-        todoPorPrioridad[i] = newRBTree();
+    for(i=0;i<5;i++)
+    {
+        todoPorPrioridad[i] = create_RBTree((int(*)(void*, void*))lower_than);
     }
-    HashMap* categorias = newHashMap();
+    Lista* categorias = createList();
 
-    cargar_archivo(todoPorFecha, todoPorPrioridad, categorias);
-
+    menu:
     printf("\n");
     printf(" _________________________________________ \n" );
     printf("|                                         |\n" );
@@ -24,42 +22,37 @@ int main()
     printf("|_________________________________________|\n" );
     printf("|                                         |\n" );
     printf("|   1.-  Agregar tarea.                   |\n" );
-    printf("|   2.-  Agregar categoria.               |\n" );
-    printf("|   3.-  Revisar tareas pendientes.       |\n" );
-    printf("|   4.-  Revisar tareas realizadas.       |\n" );
-    printf("|   5.-  Editar tarea.                    |\n" );
+    printf("|   2.-  Quitar tarea.                    |\n" );
+    printf("|   3.-  Mostrar tareas.                  |\n" );
+    printf("|   4.-  Editar tarea.                    |\n" );
     printf("|   0.-  Salir.                           |\n" );
     printf("|_________________________________________|\n" );
 
-    menu:  scanf("%d", &opcion);
+    printf("Ingrese una opcion: ");
+    scanf("%d", &opcion);
 
     switch(opcion){
     case 1:
-        printf("Opcion 1: Agregar tareas\n");
-        agregar_tarea(todoPorFecha, todoPorPrioridad, categorias);
-        break;
+        printf("Opcion 1: Agregar tareas.\n");
+        agregar_tarea(categorias, todoPorFecha, todoPorPrioridad);
+        goto menu;
     case 2:
-        printf("Opcion 2: Agregar categoria\n");
-        agregar_categoria(categorias);
-        break;
+        printf("Opcion 2: Quitar tareas.\n");
+        quitar_tarea(categorias, todoPorFecha, todoPorPrioridad);
+        goto menu;
     case 3:
-        printf("Opcion 3: Revisar tareas pendientes\n");
-        mostrar_todo(todoPorFecha, todoPorPrioridad, categorias);
-        break;
+        printf("Opcion 3: Revisar tareas pendientes.\n");
+        mostrar_todo(categorias, todoPorFecha, todoPorPrioridad);
+        goto menu;
     case 4:
-        printf("Opcion 4: Revisar tareas realizadas\n");
-        mostrar_todo(todoPorFecha, todoPorPrioridad, categorias);
-        break;
-    case 5:
-        printf("Opcion 5: Editar tareas\n");
-
-        break;
+        printf("Opcion 5: Editar tareas.\n");
+        goto menu;
     case 0:
-        printf("Opcion 0: Salir\n");
-        guardar_todo(todoPorFecha, todoPorPrioridad, categorias);
+        printf("Opcion 0: Salir.\n");
+        guardar_todo(todoPorFecha);
         break;
     default:
-        printf("Opcion invalida\n");
+        printf("Opcion invalida.\n");
         goto menu;
     }
     return 0;
