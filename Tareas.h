@@ -19,15 +19,7 @@ void quitar_tarea(Lista*, RBTree*, RBTree**);
 
 void mostrar_todo(Lista* lista_categorias,RBTree* por_fecha, RBTree** por_prioridad);
 
-void mostrar_arbol(RBTree* arbol);
-
-void mostrar_prioridad(RBTree** por_prioridad);
-
-void mostrar_categoria(Lista* list_categoria);
-
-void editar_tarea();
-
-void realizar_tarea();
+void editar_tarea(Lista* lista_categorias,RBTree* por_fecha, RBTree** por_prioridad);
 
 void guardar_todo(RBTree* por_fecha);
 
