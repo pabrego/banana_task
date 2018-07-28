@@ -12,7 +12,8 @@ int main()
         todoPorPrioridad[i] = create_RBTree((int(*)(void*, void*))lower_than);
     }
     Lista* categorias = createList();
-
+    
+    cargar_archivo(categorias, todoPorFecha, todoPorPrioridad);
     menu:
     printf("\n");
     printf(" _________________________________________ \n" );
@@ -30,7 +31,8 @@ int main()
 
     printf("Ingrese una opcion: ");
     scanf("%d", &opcion);
-
+    getchar();
+    
     switch(opcion){
     case 1:
         printf("Opcion 1: Agregar tareas.\n");
@@ -46,6 +48,7 @@ int main()
         goto menu;
     case 4:
         printf("Opcion 5: Editar tareas.\n");
+        editar_tarea(categorias, todoPorFecha, todoPorPrioridad);
         goto menu;
     case 0:
         printf("Opcion 0: Salir.\n");
