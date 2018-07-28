@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <conio.h>
 #include "lista.h"
 #include "rbtree.h"
 #include "Tareas.h"
@@ -257,6 +256,7 @@ pregunta: scanf("%d", &opcion);
             RB_delete(nodo_cat->por_fecha, nodo);
             RB_delete(nodo_cat->por_prioridad[(nodo->prioridad)-1], nodo);
             free(nodo);
+            nodo = NULL;
             printf("Tarea %s exitosamente elimindada\n", cadena);
             getchar();
         }
@@ -268,36 +268,51 @@ pregunta: scanf("%d", &opcion);
     system("cls");
 }
 
-
-void mostrar_todo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prioridad)
+void mostrar_arbol(RBTree* arbol)
 {
-    int opcion;
-    seleccionorden: system("cls");
-    printf("\n");
-    printf(" _________________________________________ \n" );
-    printf("|                                         |\n" );
-    printf("|        TODAS:                           |\n" );
-    printf("|   1.-  Ordenadas por fecha.             |\n" );
-    printf("|   2.-  Ordenadas por prioridad.         |\n" );
-    printf("|   3.-  Ordenadas por categoria.         |\n" );
-    printf("|                                         |\n" );
-    printf("|   0.-  Volver al menu principal.        |\n" );
-    printf("|_________________________________________|\n" );
-    scanf("%d", &opcion);
-    getchar();
-
-    system("cls");
-    printf("\n");
-    switch (opcion)
-    {
-        case 1: mostrar_arbol(por_fecha); getchar(); goto seleccionorden;
-        case 2: mostrar_prioridad(por_prioridad); getchar(); goto seleccionorden;
-        case 3: mostrar_categoria(lista_categorias); getchar(); goto seleccionorden;
-        case 0: break;
-        default: printf("Opcion invalida\n");
+    Tarea* imprimir = RB_first(arbol);
+    int i, day, month, year, priority, activa;
+    char* name, *category;
+    for(i=0;imprimir;i++){
+        day = imprimir->fecha->dia;
+        month = imprimir->fecha->mes;
+        year = imprimir->fecha->anio;
+        name = imprimir->nombre;
+        priority = imprimir->prioridad;
+        category = imprimir->categoria;
+        activa = imprimir->estado;
+        if(priority == 1)
+        {
+            printf("|%d.- %d/%d/%d  Muy Baja   %s  %s ",i+1 ,day, month, year, name, category);
+        }
+        else if(priority == 2)
+        {
+            printf("|%d.- %d/%d/%d  Baja  %s  %s ", i+1 ,day, month, year, name, category);
+        }
+        else if(priority == 3)
+        {
+            printf("|%d.- %d/%d/%d  Media   %s  %s ", i+1,day, month, year, name, category);
+        }
+        else if(priority == 4)
+        {
+            printf("|%d.- %d/%d/%d  Alta   %s  %s ", i+1, day, month, year, name, category);
+        }
+        else if(priority == 5)
+        {
+            printf("|%d.- %d/%d/%d  Muy Alta   %s  %s ", i+1 ,day, month, year, name, category);
+        }
+        if(!activa)
+        {
+            printf(" Sin realizar\n");
+        }
+        else
+        {
+            printf(" Realizada\n");
+        }
+        imprimir = RB_next(arbol);
     }
-    system("cls");
 }
+
 void mostrar_prioridad(RBTree** por_prioridad)
 {
     int i;
@@ -352,51 +367,35 @@ void mostrar_categoria(Lista* list_categoria)
     }
 }
 
-void mostrar_arbol(RBTree* arbol)
+void mostrar_todo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prioridad)
 {
-    Tarea* imprimir = RB_first(arbol);
-    int i, day, month, year, priority, activa;
-    char* name, *category;
-    for(i=0;imprimir;i++){
-        day = imprimir->fecha->dia;
-        month = imprimir->fecha->mes;
-        year = imprimir->fecha->anio;
-        name = imprimir->nombre;
-        priority = imprimir->prioridad;
-        category = imprimir->categoria;
-        activa = imprimir->estado;
-        if(priority == 1)
-        {
-            printf("|%d.- %d/%d/%d  Muy Baja   %s  %s ",i+1 ,day, month, year, name, category);
-        }
-        else if(priority == 2)
-        {
-            printf("|%d.- %d/%d/%d  Baja  %s  %s ", i+1 ,day, month, year, name, category);
-        }
-        else if(priority == 3)
-        {
-            printf("|%d.- %d/%d/%d  Media   %s  %s ", i+1,day, month, year, name, category);
-        }
-        else if(priority == 4)
-        {
-            printf("|%d.- %d/%d/%d  Alta   %s  %s ", i+1, day, month, year, name, category);
-        }
-        else if(priority == 5)
-        {
-            printf("|%d.- %d/%d/%d  Muy Alta   %s  %s ", i+1 ,day, month, year, name, category);
-        }
-        if(!activa)
-        {
-            printf(" Sin realizar\n");
-        }
-        else
-        {
-            printf(" Realizada\n");
-        }
-        imprimir = RB_next(arbol);
-    }
-}
+    int opcion;
+    seleccionorden: system("cls");
+    printf("\n");
+    printf(" _________________________________________ \n" );
+    printf("|                                         |\n" );
+    printf("|        TODAS:                           |\n" );
+    printf("|   1.-  Ordenadas por fecha.             |\n" );
+    printf("|   2.-  Ordenadas por prioridad.         |\n" );
+    printf("|   3.-  Ordenadas por categoria.         |\n" );
+    printf("|                                         |\n" );
+    printf("|   0.-  Volver al menu principal.        |\n" );
+    printf("|_________________________________________|\n" );
+    scanf("%d", &opcion);
+    getchar();
 
+    system("cls");
+    printf("\n");
+    switch (opcion)
+    {
+        case 1: mostrar_arbol(por_fecha); getchar(); goto seleccionorden;
+        case 2: mostrar_prioridad(por_prioridad); getchar(); goto seleccionorden;
+        case 3: mostrar_categoria(lista_categorias); getchar(); goto seleccionorden;
+        case 0: break;
+        default: printf("Opcion invalida\n");
+    }
+    system("cls");
+}
 
 Tarea* leer_tarea(char line[])
 {
@@ -485,13 +484,62 @@ void cargar_archivo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_pri
             existe = 0;
             category = crea_n_categoria(aux->categoria);
         }
-        RB_insert(por_fecha, aux->fecha, aux);
-        RB_insert(por_prioridad[aux->prioridad - 1], aux->fecha, aux);
-        RB_insert(category->por_fecha, aux->fecha, aux);
-        RB_insert(category->por_prioridad[aux->prioridad - 1], aux->fecha, aux);
+        RB_insert(por_fecha, aux, aux);
+        RB_insert(por_prioridad[aux->prioridad - 1], aux, aux);
+        RB_insert(category->por_fecha, aux, aux);
+        RB_insert(category->por_prioridad[aux->prioridad - 1], aux, aux);
         if(!existe)
         {
             L_pushBack(lista_categorias, category);
         }
     }
+}
+
+
+void editar_tarea(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prioridad)
+{
+    int opcion, i;
+    system("cls");
+    
+    //Aqui debe ir un menu que de la posibilidad de hacer el realizar_tarea() o lo que esta aca abajo.
+    
+    printf("\n");
+    mostrar_arbol(por_fecha);
+    printf("\n");
+    printf("Eliga la tarea a editar: ");
+    scanf("%d", &opcion);
+    getchar();
+    Tarea* aux = RB_first(por_fecha);
+    i = 1;
+    while (aux)
+    {
+        if (opcion == i)
+            break;
+        i++;
+        aux = RB_next(por_fecha);
+    }
+    
+    printf("\n");
+    printf("|%d.- %d/%d/%d  %s  %s ", opcion, aux->fecha->dia, aux->fecha->mes, aux->fecha->anio, aux->nombre, aux->categoria);
+
+    if(aux->prioridad == 1)
+        printf("Muy Baja  ");
+    else if(aux->prioridad == 2)
+        printf("Baja  ");
+    else if(aux->prioridad == 3)
+        printf("Media  ");
+    else if(aux->prioridad == 4)
+        printf("Alta  ");
+    else if(aux->prioridad == 5)
+        printf("Muy Alta  ");
+
+    if(!aux->estado)
+        printf(" Sin realizar\n");
+    else
+        printf(" Realizada\n");
+    
+    printf("Modifique los datos...\n");
+    //Hacer copia del nodo Tarea* y luego modificar este, una vez hecho se elimina el nodo original de los arboles
+    //Una vez eliminado de los arboles, ingreso el nodo copia en todos los arboles, EZ.
+    system("cls");
 }
