@@ -539,6 +539,7 @@ void editar_tarea(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prior
         printf(" Realizada\n");
     
     printf("Modifique los datos...\n");
+    getchar();
     //Hacer copia del nodo Tarea* y luego modificar este, una vez hecho se elimina el nodo original de los arboles
     //Una vez eliminado de los arboles, ingreso el nodo copia en todos los arboles, EZ.
     system("cls");
