@@ -957,18 +957,19 @@ void cargar_archivo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_pri
 {
     FILE* fp = fopen("tareas_guardadas.csv","r");
     if(fp == NULL){
+        printf("error de lectura\n");
         exit(0);
     }
     Tarea* aux;
     Categoria* category;
     char linea[250];
-    int i, existe;
+    int existe;
     while(fgets(linea, 250, fp))
     {
         existe = 1;
         linea[strlen(linea)-1] = '\0';
         aux = leer_tarea(linea);
-        category = buscar_categoria(aux->categoria, lista_categorias);
+        category = buscar_categoria(lista_categorias, aux->categoria);
         if(category == NULL)
         {
             existe = 0;
