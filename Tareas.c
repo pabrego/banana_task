@@ -495,20 +495,64 @@ void cargar_archivo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_pri
     }
 }
 
-
-void editar_tarea(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prioridad)
+void realizar_tarea(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prioridad)
 {
-    int opcion, i;
     system("cls");
-    
-    //Aqui debe ir un menu que de la posibilidad de hacer el realizar_tarea() o lo que esta aca abajo.
-    
+    int opcion, i;
+    Tarea* aux;
+    printf("\n");
+    mostrar_arbol(por_fecha);
+    printf("\n");
+    printf("Eliga la tarea a realizar: ");
+    scanf("%d", &opcion);
+    getchar();
+
+    aux = RB_first(por_fecha);
+    i = 1;
+    while (aux)
+    {
+        if (opcion == i)
+            break;
+        i++;
+        aux = RB_next(por_fecha);
+    }
+    aux->estado = 1;
+    printf("\n");
+    printf("| %d/%d/%d  %s  Realizada\n", aux->fecha->dia, aux->fecha->mes, aux->fecha->anio, aux->nombre);
+    getchar();
+    system("cls");
+}
+
+void insertar_copia(Tarea* auxCopia, Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prioridad)
+{
+    Categoria* nodo_cat = buscar_categoria(lista_categorias, auxCopia->categoria);
+    RB_insert(por_fecha, auxCopia, auxCopia);
+    RB_insert(por_prioridad[(auxCopia->prioridad)-1], auxCopia, auxCopia);
+    RB_insert(nodo_cat->por_fecha, auxCopia, auxCopia);
+    RB_insert(nodo_cat->por_prioridad[(auxCopia->prioridad)-1], auxCopia, auxCopia);
+}
+
+void quitar_original(Tarea* aux, Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prioridad)
+{
+    Categoria* nodo_cat = buscar_categoria(lista_categorias, aux->categoria);
+    RB_delete(por_fecha, aux);
+    RB_delete(por_prioridad[(aux->prioridad)-1], aux);
+    RB_delete(nodo_cat->por_fecha, aux);
+    RB_delete(nodo_cat->por_prioridad[(aux->prioridad)-1], aux);
+    free(aux);
+}
+
+void modificar_tarea(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prioridad)
+{
+    system("cls");
+    int opcion, i;
     printf("\n");
     mostrar_arbol(por_fecha);
     printf("\n");
     printf("Eliga la tarea a editar: ");
     scanf("%d", &opcion);
     getchar();
+
     Tarea* aux = RB_first(por_fecha);
     i = 1;
     while (aux)
@@ -518,29 +562,111 @@ void editar_tarea(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prior
         i++;
         aux = RB_next(por_fecha);
     }
-    
-    printf("\n");
-    printf("|%d.- %d/%d/%d  %s  %s ", opcion, aux->fecha->dia, aux->fecha->mes, aux->fecha->anio, aux->nombre, aux->categoria);
 
-    if(aux->prioridad == 1)
+    Tarea* auxCopia = crea_tarea();
+    auxCopia->nombre = aux->nombre;
+    auxCopia->categoria = aux->categoria;
+    auxCopia->descripcion = aux->descripcion;
+    auxCopia->fecha->dia = aux->fecha->dia;
+    auxCopia->fecha->mes = aux->fecha->mes;
+    auxCopia->fecha->anio = aux->fecha->anio;
+    auxCopia->estado = aux->estado;
+    auxCopia->prioridad = aux->prioridad;
+
+noterminar: system("cls");
+    printf("\n");
+    printf("|%d.- %d/%d/%d  %s  |%s|  %s  ", i, auxCopia->fecha->dia, auxCopia->fecha->mes, auxCopia->fecha->anio, auxCopia->nombre, auxCopia->descripcion, auxCopia->categoria);
+
+    if(auxCopia->prioridad == 1)
         printf("Muy Baja  ");
-    else if(aux->prioridad == 2)
+    else if(auxCopia->prioridad == 2)
         printf("Baja  ");
-    else if(aux->prioridad == 3)
+    else if(auxCopia->prioridad == 3)
         printf("Media  ");
-    else if(aux->prioridad == 4)
+    else if(auxCopia->prioridad == 4)
         printf("Alta  ");
-    else if(aux->prioridad == 5)
+    else if(auxCopia->prioridad == 5)
         printf("Muy Alta  ");
 
-    if(!aux->estado)
+    if(!auxCopia->estado)
         printf(" Sin realizar\n");
     else
         printf(" Realizada\n");
-    
+
+    printf("\n");
     printf("Modifique los datos...\n");
+    printf("\n");
+    printf(" _________________________________________ \n" );
+    printf("|                                         |\n" );
+    printf("|   1.-  Fecha.                           |\n" );
+    printf("|   2.-  Nombre.                          |\n" );
+    printf("|   3.-  Descripcion.                     |\n" );
+    printf("|   4.-  Prioridad.                       |\n" );
+    printf("|                                         |\n" );
+    printf("|   0.-  Guardar cambios y volver.        |\n" );
+    printf("|_________________________________________|\n" );
+    scanf("%d", &opcion);
     getchar();
-    //Hacer copia del nodo Tarea* y luego modificar este, una vez hecho se elimina el nodo original de los arboles
-    //Una vez eliminado de los arboles, ingreso el nodo copia en todos los arboles, EZ.
+
+    switch (opcion)
+    {
+        case 1: printf("Ingrese el dia:  ");
+                scanf("%d", &auxCopia->fecha->dia);
+                printf("\n");
+                printf("Ingrese el mes:  ");
+                scanf("%d", &auxCopia->fecha->mes);
+                printf("\n");
+                printf("Ingrese el a%co:  ", 164);
+                scanf("%d", &auxCopia->fecha->anio);
+                goto noterminar;
+        case 2: printf("Ingrese el nombre: ");
+                fgets(auxCopia->nombre, 30, stdin);
+                auxCopia->nombre[strlen(auxCopia->nombre)-1] = '\0';
+                goto noterminar;
+        case 3: printf("Ingrese la descripcion: ");
+                fgets(auxCopia->descripcion, 140, stdin);
+                auxCopia->descripcion[strlen(auxCopia->descripcion)-1] = '\0';
+                goto noterminar;
+        case 4: printf("Ingrese la prioridad: ");
+priori:         scanf("%d", &auxCopia->prioridad);
+                if((auxCopia->prioridad>5) || (auxCopia->prioridad<1))
+                {
+                    printf("Porfavor, ingrese una prioridad valida: ");
+                    goto priori;
+                }
+                goto noterminar;
+        case 0: quitar_original(aux, lista_categorias, por_fecha, por_prioridad);
+                insertar_copia(auxCopia, lista_categorias, por_fecha, por_prioridad);
+                printf("Se guardaron los datos exitosamente.");
+                break;
+        default: printf("Opcion invalida\n");
+    }
+    system("cls");
+}
+
+void editar_tarea(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prioridad)
+{
+    int opcion;
+editar: system("cls");
+    printf("\n");
+    printf(" _________________________________________ \n" );
+    printf("|                                         |\n" );
+    printf("|   1.-  Modificar tarea.                 |\n" );
+    printf("|   2.-  Realizar tarea.                  |\n" );
+    printf("|                                         |\n" );
+    printf("|   0.-  Volver al menu principal.        |\n" );
+    printf("|_________________________________________|\n" );
+
+    scanf("%d", &opcion);
+    getchar();
+
+    printf("\n");
+    switch (opcion)
+    {
+        case 1: modificar_tarea(lista_categorias, por_fecha, por_prioridad); goto editar;
+        case 2: realizar_tarea(lista_categorias, por_fecha, por_prioridad); goto editar;
+        case 0: break;
+        default: printf("Opcion invalida\n");
+    }
     system("cls");
 }
