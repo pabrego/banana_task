@@ -464,10 +464,12 @@ void guardar_todo(RBTree* por_fecha)
 
 void cargar_archivo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prioridad)
 {
+    L_pushBack(lista_categorias, crea_n_categoria("Universidad"));
+    L_pushBack(lista_categorias, crea_n_categoria("Casa"));
+    L_pushBack(lista_categorias, crea_n_categoria("Trabajo")); 
     FILE* fp = fopen("tareas_guardadas.csv","r");
     if(fp == NULL){
-        printf("error de lectura\n");
-        exit(0);
+        return;
     }
     Tarea* aux;
     Categoria* category;
