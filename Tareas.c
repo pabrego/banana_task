@@ -218,7 +218,7 @@ void quitar_tarea(Lista* Categorias, RBTree* todoPorFecha, RBTree** todoPorPrior
 {
     system("cls");
     char cadena[31];
-    int opcion;
+    int opcion, existe = 0;
     Tarea* nodo;
 
     Categoria* nodo_cat = NULL;
@@ -257,14 +257,20 @@ pregunta: scanf("%d", &opcion);
             RB_delete(nodo_cat->por_prioridad[(nodo->prioridad)-1], nodo);
             free(nodo);
             nodo = NULL;
+            existe = 1;
             printf("Tarea %s exitosamente elimindada\n", cadena);
-            getchar();
         }
         else
         {
             nodo = RB_next(todoPorFecha);
         }
     }
+    if(!existe)
+    {
+        printf("La tarea ingresada no se encuentra en el sistema.\n");
+    }
+    printf("Presione ENTER para continuar");
+    getchar();
     system("cls");
 }
 
@@ -273,43 +279,51 @@ void mostrar_arbol(RBTree* arbol)
     Tarea* imprimir = RB_first(arbol);
     int i, day, month, year, priority, activa;
     char* name, *category;
-    for(i=0;imprimir;i++){
-        day = imprimir->fecha->dia;
-        month = imprimir->fecha->mes;
-        year = imprimir->fecha->anio;
-        name = imprimir->nombre;
-        priority = imprimir->prioridad;
-        category = imprimir->categoria;
-        activa = imprimir->estado;
-        if(priority == 1)
-        {
-            printf("|%d.- %d/%d/%d  Muy Baja   %s  %s ",i+1 ,day, month, year, name, category);
+
+    if(arbol == NULL)
+    {
+        printf("No se han encontrado tareas en el sistema.");
+    }
+    else
+    {
+        for(i=0;imprimir;i++){
+            day = imprimir->fecha->dia;
+            month = imprimir->fecha->mes;
+            year = imprimir->fecha->anio;
+            name = imprimir->nombre;
+            priority = imprimir->prioridad;
+            category = imprimir->categoria;
+            activa = imprimir->estado;
+            if(priority == 1)
+            {
+                printf("|%d.- %d/%d/%d  Muy Baja   %s  %s ",i+1 ,day, month, year, name, category);
+            }
+            else if(priority == 2)
+            {
+                printf("|%d.- %d/%d/%d  Baja  %s  %s ", i+1 ,day, month, year, name, category);
+            }
+            else if(priority == 3)
+            {
+                printf("|%d.- %d/%d/%d  Media   %s  %s ", i+1,day, month, year, name, category);
+            }
+            else if(priority == 4)
+            {
+                printf("|%d.- %d/%d/%d  Alta   %s  %s ", i+1, day, month, year, name, category);
+            }
+            else if(priority == 5)
+            {
+                printf("|%d.- %d/%d/%d  Muy Alta   %s  %s ", i+1 ,day, month, year, name, category);
+            }
+            if(!activa)
+            {
+                printf(" Sin realizar\n");
+            }
+            else
+            {
+                printf(" Realizada\n");
+            }
+            imprimir = RB_next(arbol);
         }
-        else if(priority == 2)
-        {
-            printf("|%d.- %d/%d/%d  Baja  %s  %s ", i+1 ,day, month, year, name, category);
-        }
-        else if(priority == 3)
-        {
-            printf("|%d.- %d/%d/%d  Media   %s  %s ", i+1,day, month, year, name, category);
-        }
-        else if(priority == 4)
-        {
-            printf("|%d.- %d/%d/%d  Alta   %s  %s ", i+1, day, month, year, name, category);
-        }
-        else if(priority == 5)
-        {
-            printf("|%d.- %d/%d/%d  Muy Alta   %s  %s ", i+1 ,day, month, year, name, category);
-        }
-        if(!activa)
-        {
-            printf(" Sin realizar\n");
-        }
-        else
-        {
-            printf(" Realizada\n");
-        }
-        imprimir = RB_next(arbol);
     }
 }
 
@@ -347,6 +361,7 @@ void mostrar_categoria(Lista* list_categoria)
         aux = L_next(list_categoria);
     }
 
+
     printf("\n");
     printf(" _________________________________________ \n" );
     printf("|                                         |\n" );
@@ -369,30 +384,63 @@ void mostrar_categoria(Lista* list_categoria)
 
 void mostrar_todo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prioridad)
 {
-    int opcion;
-    seleccionorden: system("cls");
-    printf("\n");
-    printf(" _________________________________________ \n" );
-    printf("|                                         |\n" );
-    printf("|        TODAS:                           |\n" );
-    printf("|   1.-  Ordenadas por fecha.             |\n" );
-    printf("|   2.-  Ordenadas por prioridad.         |\n" );
-    printf("|   3.-  Ordenadas por categoria.         |\n" );
-    printf("|                                         |\n" );
-    printf("|   0.-  Volver al menu principal.        |\n" );
-    printf("|_________________________________________|\n" );
-    scanf("%d", &opcion);
-    getchar();
-
     system("cls");
-    printf("\n");
-    switch (opcion)
+    int opcion;
+    Tarea* val;
+    val = RB_first(por_fecha);
+    if(val == NULL)
     {
-        case 1: mostrar_arbol(por_fecha); getchar(); goto seleccionorden;
-        case 2: mostrar_prioridad(por_prioridad); getchar(); goto seleccionorden;
-        case 3: mostrar_categoria(lista_categorias); getchar(); goto seleccionorden;
-        case 0: break;
-        default: printf("Opcion invalida\n");
+        printf("No hay tareas en el sistema.\n Presione ENTER para continuar");
+    }
+    else
+    {
+seleccionorden:
+        printf("\n");
+        printf(" _________________________________________ \n" );
+        printf("|                                         |\n" );
+        printf("|        TODAS:                           |\n" );
+        printf("|   1.-  Ordenadas por fecha.             |\n" );
+        printf("|   2.-  Ordenadas por prioridad.         |\n" );
+        printf("|   3.-  Ordenadas por categoria.         |\n" );
+        printf("|                                         |\n" );
+        printf("|   0.-  Volver al menu principal.        |\n" );
+        printf("|_________________________________________|\n" );
+
+        scanf("%d", &opcion);
+        getchar();
+        system("cls");
+        printf("\n");
+        switch (opcion)
+        {
+            case 1: mostrar_arbol(por_fecha);
+            {
+                printf("Presione ENTER para continuar");
+                getchar();
+                system("cls");
+                goto seleccionorden;
+            }
+            case 2: mostrar_prioridad(por_prioridad);
+            {
+                printf("Presione ENTER para continuar");
+                getchar();
+                system("cls");
+                goto seleccionorden;
+            }
+            case 3: mostrar_categoria(lista_categorias);
+            {
+                printf("Presione ENTER para continuar");
+                getchar();
+                system("cls");
+                goto seleccionorden;
+            }
+            case 0: break;
+            default:
+                {
+                    printf("Opcion invalida\n");
+                    opcion = 0;
+                    goto seleccionorden;
+                }
+        }
     }
     system("cls");
 }
@@ -466,7 +514,7 @@ void cargar_archivo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_pri
 {
     L_pushBack(lista_categorias, crea_n_categoria("Universidad"));
     L_pushBack(lista_categorias, crea_n_categoria("Casa"));
-    L_pushBack(lista_categorias, crea_n_categoria("Trabajo")); 
+    L_pushBack(lista_categorias, crea_n_categoria("Trabajo"));
     FILE* fp = fopen("tareas_guardadas.csv","r");
     if(fp == NULL){
         return;
@@ -551,13 +599,13 @@ void modificar_tarea(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_pr
     printf("\n");
     mostrar_arbol(por_fecha);
     printf("\n");
-    printf("Eliga la tarea a editar: ");
+    printf("Seleccione el n%cmero la tarea a editar: ", 163);
     scanf("%d", &opcion);
     getchar();
 
     Tarea* aux = RB_first(por_fecha);
     i = 1;
-    while (aux)
+    while(aux)
     {
         if (opcion == i)
             break;
@@ -642,6 +690,9 @@ priori:         scanf("%d", &auxCopia->prioridad);
                 printf("Se guardaron los datos exitosamente.");
                 break;
         default: printf("Opcion invalida\n");
+        {
+            getchar();
+        }
     }
     system("cls");
 }
