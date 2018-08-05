@@ -18,6 +18,7 @@ int main()
         todoPorPrioridad[i] = create_RBTree((int(*)(void*, void*))(lower_than));
     }
 
+    cargar_archivo(Categorias, todoPorFecha, todoPorPrioridad);
     menu_principal();
     gotoxy(47,y);
     printf(">>");
@@ -81,13 +82,17 @@ int main()
             else if(y == 15)
             {
                 gotoxy(53, 20);
-                printf("Editar no esta listo :c");
-                gotoxy(53, y);
+                editar_tarea(Categorias, todoPorFecha, todoPorPrioridad);
+                bordes_menu();
+                menu_principal();
+                gotoxy(47,y);
+                printf(">>");
             }
             else
             {
-                gotoxy(53,20);
-                printf("Salir                   ");
+                gotoxy(45,20);
+                guardar_todo(todoPorFecha);
+                printf("Gracias por usar Banana Task");
                 gotoxy(0,26);
                 break;
             }
