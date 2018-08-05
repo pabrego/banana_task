@@ -613,86 +613,94 @@ void modificar_tarea(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_pr
         aux = RB_next(por_fecha);
     }
 
-    Tarea* auxCopia = crea_tarea();
-    auxCopia->nombre = aux->nombre;
-    auxCopia->categoria = aux->categoria;
-    auxCopia->descripcion = aux->descripcion;
-    auxCopia->fecha->dia = aux->fecha->dia;
-    auxCopia->fecha->mes = aux->fecha->mes;
-    auxCopia->fecha->anio = aux->fecha->anio;
-    auxCopia->estado = aux->estado;
-    auxCopia->prioridad = aux->prioridad;
-
-noterminar: system("cls");
-    printf("\n");
-    printf("|%d.- %d/%d/%d  %s  |%s|  %s  ", i, auxCopia->fecha->dia, auxCopia->fecha->mes, auxCopia->fecha->anio, auxCopia->nombre, auxCopia->descripcion, auxCopia->categoria);
-
-    if(auxCopia->prioridad == 1)
-        printf("Muy Baja  ");
-    else if(auxCopia->prioridad == 2)
-        printf("Baja  ");
-    else if(auxCopia->prioridad == 3)
-        printf("Media  ");
-    else if(auxCopia->prioridad == 4)
-        printf("Alta  ");
-    else if(auxCopia->prioridad == 5)
-        printf("Muy Alta  ");
-
-    if(!auxCopia->estado)
-        printf(" Sin realizar\n");
-    else
-        printf(" Realizada\n");
-
-    printf("\n");
-    printf("Modifique los datos...\n");
-    printf("\n");
-    printf(" _________________________________________ \n" );
-    printf("|                                         |\n" );
-    printf("|   1.-  Fecha.                           |\n" );
-    printf("|   2.-  Nombre.                          |\n" );
-    printf("|   3.-  Descripcion.                     |\n" );
-    printf("|   4.-  Prioridad.                       |\n" );
-    printf("|                                         |\n" );
-    printf("|   0.-  Guardar cambios y volver.        |\n" );
-    printf("|_________________________________________|\n" );
-    scanf("%d", &opcion);
-    getchar();
-
-    switch (opcion)
+    if(aux)
     {
-        case 1: printf("Ingrese el dia:  ");
-                scanf("%d", &auxCopia->fecha->dia);
-                printf("\n");
-                printf("Ingrese el mes:  ");
-                scanf("%d", &auxCopia->fecha->mes);
-                printf("\n");
-                printf("Ingrese el a%co:  ", 164);
-                scanf("%d", &auxCopia->fecha->anio);
-                goto noterminar;
-        case 2: printf("Ingrese el nombre: ");
-                fgets(auxCopia->nombre, 30, stdin);
-                auxCopia->nombre[strlen(auxCopia->nombre)-1] = '\0';
-                goto noterminar;
-        case 3: printf("Ingrese la descripcion: ");
-                fgets(auxCopia->descripcion, 140, stdin);
-                auxCopia->descripcion[strlen(auxCopia->descripcion)-1] = '\0';
-                goto noterminar;
-        case 4: printf("Ingrese la prioridad: ");
-priori:         scanf("%d", &auxCopia->prioridad);
-                if((auxCopia->prioridad>5) || (auxCopia->prioridad<1))
-                {
-                    printf("Porfavor, ingrese una prioridad valida: ");
-                    goto priori;
-                }
-                goto noterminar;
-        case 0: quitar_original(aux, lista_categorias, por_fecha, por_prioridad);
-                insertar_copia(auxCopia, lista_categorias, por_fecha, por_prioridad);
-                printf("Se guardaron los datos exitosamente.");
-                break;
-        default: printf("Opcion invalida\n");
+        Tarea* auxCopia = crea_tarea();
+        auxCopia->nombre = aux->nombre;
+        auxCopia->categoria = aux->categoria;
+        auxCopia->descripcion = aux->descripcion;
+        auxCopia->fecha->dia = aux->fecha->dia;
+        auxCopia->fecha->mes = aux->fecha->mes;
+        auxCopia->fecha->anio = aux->fecha->anio;
+        auxCopia->estado = aux->estado;
+        auxCopia->prioridad = aux->prioridad;
+
+    noterminar: system("cls");
+        printf("\n");
+        printf("|%d.- %d/%d/%d  %s  |%s|  %s  ", i, auxCopia->fecha->dia, auxCopia->fecha->mes, auxCopia->fecha->anio, auxCopia->nombre, auxCopia->descripcion, auxCopia->categoria);
+
+        if(auxCopia->prioridad == 1)
+            printf("Muy Baja  ");
+        else if(auxCopia->prioridad == 2)
+            printf("Baja  ");
+        else if(auxCopia->prioridad == 3)
+            printf("Media  ");
+        else if(auxCopia->prioridad == 4)
+            printf("Alta  ");
+        else if(auxCopia->prioridad == 5)
+            printf("Muy Alta  ");
+
+        if(!auxCopia->estado)
+            printf(" Sin realizar\n");
+        else
+            printf(" Realizada\n");
+
+        printf("\n");
+        printf("Modifique los datos...\n");
+        printf("\n");
+        printf(" _________________________________________ \n" );
+        printf("|                                         |\n" );
+        printf("|   1.-  Fecha.                           |\n" );
+        printf("|   2.-  Nombre.                          |\n" );
+        printf("|   3.-  Descripcion.                     |\n" );
+        printf("|   4.-  Prioridad.                       |\n" );
+        printf("|                                         |\n" );
+        printf("|   0.-  Guardar cambios y volver.        |\n" );
+        printf("|_________________________________________|\n" );
+        scanf("%d", &opcion);
+        getchar();
+
+        switch (opcion)
         {
-            getchar();
+            case 1: printf("Ingrese el dia:  ");
+                    scanf("%d", &auxCopia->fecha->dia);
+                    printf("\n");
+                    printf("Ingrese el mes:  ");
+                    scanf("%d", &auxCopia->fecha->mes);
+                    printf("\n");
+                    printf("Ingrese el a%co:  ", 164);
+                    scanf("%d", &auxCopia->fecha->anio);
+                    goto noterminar;
+            case 2: printf("Ingrese el nombre: ");
+                    fgets(auxCopia->nombre, 30, stdin);
+                    auxCopia->nombre[strlen(auxCopia->nombre)-1] = '\0';
+                    goto noterminar;
+            case 3: printf("Ingrese la descripcion: ");
+                    fgets(auxCopia->descripcion, 140, stdin);
+                    auxCopia->descripcion[strlen(auxCopia->descripcion)-1] = '\0';
+                    goto noterminar;
+            case 4: printf("Ingrese la prioridad: ");
+    priori:         scanf("%d", &auxCopia->prioridad);
+                    if((auxCopia->prioridad>5) || (auxCopia->prioridad<1))
+                    {
+                        printf("Porfavor, ingrese una prioridad valida: ");
+                        goto priori;
+                    }
+                    goto noterminar;
+            case 0: quitar_original(aux, lista_categorias, por_fecha, por_prioridad);
+                    insertar_copia(auxCopia, lista_categorias, por_fecha, por_prioridad);
+                    printf("Se guardaron los datos exitosamente.");
+                    break;
+            default: printf("Opcion invalida\n");
+            {
+                getchar();
+            }
         }
+    }
+    else
+    {
+        printf("La opcion ingresada no es valida.");
+        getchar();
     }
     system("cls");
 }
