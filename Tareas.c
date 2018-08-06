@@ -279,15 +279,15 @@ void mostrar_arbol(RBTree* arbol)
     int i, day, month, year, priority, activa;
     char* name, *category;
 
-    if(arbol == NULL)
+    if(arbol == NULL)       //si el arbol no contiene nada....
     {
         printf("No se han encontrado tareas en el sistema.");
     }
     else
     {
         for(i=0;imprimir;i++){
-            day = imprimir->fecha->dia;
-            month = imprimir->fecha->mes;
+            day = imprimir->fecha->dia;     //actualizo valores de variables
+            month = imprimir->fecha->mes;   //con la nueva tarea 'imprimir'
             year = imprimir->fecha->anio;
             name = imprimir->nombre;
             priority = imprimir->prioridad;
@@ -321,7 +321,7 @@ void mostrar_arbol(RBTree* arbol)
             {
                 printf(" Realizada\n");
             }
-            imprimir = RB_next(arbol);
+            imprimir = RB_next(arbol);   //paso a la siguiente tarea del arbol
         }
     }
 }
@@ -329,9 +329,9 @@ void mostrar_arbol(RBTree* arbol)
 void mostrar_prioridad(RBTree** por_prioridad)
 {
     int i;
-    for(i=4;i>=0;i--)
+    for(i=4;i>=0;i--)   //recorro el arreglo de arboles por prioridad
     {
-        mostrar_arbol(por_prioridad[i]);
+        mostrar_arbol(por_prioridad[i]);//imprimo el arbol
     }
 }
 
@@ -342,19 +342,19 @@ void mostrar_categoria(Lista* list_categoria)
     Categoria* aux = L_first(list_categoria);
     printf(" _________________________________________ \n" );
     printf("\n" );
-    for(i=0;i<L_get_size(list_categoria);i++)
+    for(i=0;i<L_get_size(list_categoria);i++)   //recorro lista de categorias
     {
-        printf(" %d.- %s \n", i+1, aux->n_categoria);
+        printf(" %d.- %s \n", i+1, aux->n_categoria);//imprimo el nombre de la categoria
         aux = L_next(list_categoria);
     }
     printf(" _________________________________________ \n" );
 
     printf("Eliga una de las categorias.\n");
-    scanf("%d", &opcion);
+    scanf("%d", &opcion);       //se pregunta por el numero de la categoria
     getchar();
     aux = L_first(list_categoria);
     for(i=0;i<L_get_size(list_categoria);i++)
-    {
+    {                        //recorro la lista hasta la categoria seleccionada
         if (opcion == i+1)
             break;
         aux = L_next(list_categoria);
@@ -368,14 +368,14 @@ void mostrar_categoria(Lista* list_categoria)
     printf("|   2.-  Categorias por prioridad.        |\n" );
     printf("|_________________________________________|\n" );
 
-    scanf("%d", &opcion);
+    scanf("%d", &opcion);       //leo opcion elegida
     getchar();
     system("cls");
     printf("\n");
     switch (opcion)
     {
-        case 1: mostrar_arbol(aux->por_fecha);break;
-        case 2: mostrar_prioridad(aux->por_prioridad);break;
+        case 1: mostrar_arbol(aux->por_fecha);break;// si es 1, paso el arbol ordenado por fechas
+        case 2: mostrar_prioridad(aux->por_prioridad);break;//si es 2, paso el arbol ordenado por prioridad
         case 0: break;
         default: printf("Opcion invalida\n");
     }
@@ -393,7 +393,7 @@ void mostrar_todo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prior
     }
     else
     {
-seleccionorden:
+    seleccionorden:
         printf("\n");
         printf(" _________________________________________ \n" );
         printf("|                                         |\n" );
@@ -409,8 +409,8 @@ seleccionorden:
         getchar();
         system("cls");
         printf("\n");
-        switch (opcion)
-        {
+        switch (opcion) //se pregunta opcion y se llama a la funcion respectiva
+        {               //segun el orden en el cual se quieran imprimir las tareas
             case 1: mostrar_arbol(por_fecha);
             {
                 printf("Presione ENTER para continuar");
@@ -444,58 +444,57 @@ seleccionorden:
     system("cls");
 }
 
-Tarea* leer_tarea(char line[])
-{
+Tarea* leer_tarea(char line[])//recibo una linea del archivo con la informacion de la tarea
+{                             //devuelvo informacion en formato 'Tarea'
     Tarea* t = crea_tarea();
-    const char s[2] = ",";
+    const char s[2] = ",";//datos separados por ','
     char *token;
 
-    token = strtok(line, s);
+    token = strtok(line, s);       //leo el dia de la tarea
     token[strlen(token)]='\0';
     t->fecha->dia = atoi(token);
 
-    token = strtok(NULL, s);
+    token = strtok(NULL, s);        //leo el mes de la tarea
     token[strlen(token)]='\0';
     t->fecha->mes = atoi(token);
 
-    token = strtok(NULL, s);
+    token = strtok(NULL, s);        //leo al año de la tarea
     token[strlen(token)]='\0';
     t->fecha->anio = atoi(token);
 
-    token = strtok(NULL, s);
+    token = strtok(NULL, s);        //leo la prioridad de la tarea
     token[strlen(token)]='\0';
     t->prioridad = atoi(token);
 
-    token = strtok(NULL, s);
+    token = strtok(NULL, s);        //leo el nombre de la tarea
     token[strlen(token)]='\0';
     strcpy(t->nombre, token);
 
-    token = strtok(NULL, s);
+    token = strtok(NULL, s);        //leo la descripcion de la tarea
     token[strlen(token)]='\0';
     strcpy(t->descripcion, token);
 
-    token = strtok(NULL, s);
+    token = strtok(NULL, s);        //leo la categoria de la tarea
     token[strlen(token)]='\0';
     strcpy(t->categoria, token);
 
-    token = strtok(NULL,s);
+    token = strtok(NULL,s);         //verifico el estado de la tarea
     if(token != NULL)
     {
         t->estado = atoi(token);
     }
     return t;
-}
 
 void guardar_todo(RBTree* por_fecha)
 {
-    FILE* fp = fopen("tareas_guardadas.csv", "w");
+    FILE* fp = fopen("tareas_guardadas.csv", "w");// creo/abro cargar_archivo
     Tarea* imprimir = RB_first(por_fecha);
     int day, month, year, priority, activa;
     char* name, *category, *desc;
 
     while(imprimir)
     {
-        day = imprimir->fecha->dia;
+        day = imprimir->fecha->dia;     //actualizo dato de la tarea a guardar
         month = imprimir->fecha->mes;
         year = imprimir->fecha->anio;
         name = imprimir->nombre;
@@ -504,35 +503,38 @@ void guardar_todo(RBTree* por_fecha)
         activa = imprimir->estado;
         desc = imprimir->descripcion;
         fprintf(fp, "%d,%d,%d,%d,%s,%s,%s,%d\n", day, month, year, priority, name, desc, category, activa);
+        //guardo en una linea todos los datos de la tarea
         imprimir = RB_next(por_fecha);
     }
-    fclose(fp);
+    fclose(fp);//cierro archivo
 }
 
 void cargar_archivo(Lista* lista_categorias, RBTree* por_fecha, RBTree** por_prioridad)
 {
+    //inicializo 3 categorias predeterminadas
     L_pushBack(lista_categorias, crea_n_categoria("Universidad"));
     L_pushBack(lista_categorias, crea_n_categoria("Casa"));
     L_pushBack(lista_categorias, crea_n_categoria("Trabajo"));
-    FILE* fp = fopen("tareas_guardadas.csv","r");
+    FILE* fp = fopen("tareas_guardadas.csv","r");//abro archivo con las tareas
     if(fp == NULL){
-        return;
+        return;     //si no existe retorno
     }
     Tarea* aux;
     Categoria* category;
     char linea[250];
     int existe;
-    while(fgets(linea, 250, fp))
+    while(fgets(linea, 250, fp))//leo cada linea del archivo
     {
         existe = 1;
         linea[strlen(linea)-1] = '\0';
-        aux = leer_tarea(linea);
-        category = buscar_categoria(lista_categorias, aux->categoria);
+        aux = leer_tarea(linea);    //creo la tarea con la info de la linea
+        category = buscar_categoria(lista_categorias, aux->categoria);//busco categoria
         if(category == NULL)
         {
-            existe = 0;
+            existe = 0; //si no existe, creo la categoria
             category = crea_n_categoria(aux->categoria);
         }
+     //inserto la tarea en sus respectivos arboles
         RB_insert(por_fecha, aux, aux);
         RB_insert(por_prioridad[aux->prioridad - 1], aux, aux);
         RB_insert(category->por_fecha, aux, aux);
